@@ -6,7 +6,7 @@ const UserSchema = new mongoose.Schema(
         password: {type: String, required: true},
         isAdmin: {type: Boolean, default: false},
         likedProductId: {type: [String]},    // liked id
-        purchasedId: {type: [String]} // purchased id
+        // purchasedId: {type: [String]} // purchased id
     }
 ,{timestamps: true});
 

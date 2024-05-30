@@ -1,12 +1,11 @@
 import React, { useEffect, useState } from 'react'
 import Navbar from '../Components/Navbar'
-import Slider from '../Components/Slider'
 import Card from '../Components/Card'
 import Footer from '../Components/Footer'
-import { Link } from 'react-router-dom'
 import axios from 'axios'
+import { Link } from 'react-router-dom'
 
-const Home = () => {
+const AllProducts = () => {
   const [categories, setCategories] = useState([]);
   const [products, setProducts] = useState([]);
   useEffect(()=>{
@@ -38,7 +37,7 @@ const Home = () => {
             }
           }
           const id = category._id;
-          const response = await axios.get(`${process.env.REACT_APP_SERVER_URL}/api/product/category/${id}/?page=1&size=5`,config);
+          const response = await axios.get(`${process.env.REACT_APP_SERVER_URL}/api/product/category/${id}/?page=1&size=4`,config);
           const data = {id , products : response.data.products};
           // console.log(data);
           // setProducts(prev => [...prev, ...data]);
@@ -69,32 +68,30 @@ const Home = () => {
   return (
     <>
       <Navbar/>
-      <Slider/>
       {categories &&
         categories.map((category) => {
           return (
               <div className='m-4' key={category._id}>
-                <div className='text-3xl font-semibold font-PlayfairDisplay border-l-[6px] border-orange-600 pb-2 pl-2'>
-                  <Link to={`/category/${category._id}`}>{category.title}</Link>
-                </div>  {/*Electronics*/}
+                <div className='text-3xl font-semibold font-PlayfairDisplay border-l-[6px] border-orange-600 pb-2 pl-2'>{category.title}</div>  {/*Electronics*/}
                 <div className='bg-neutral-100 my-[15px] p-2 rounded-[10px] shadow-inner  grid grid-cols-5 overflow-auto'>{/* grid grid-cols-5 gap-4 */}
                   {
                     getIndexProduct(category._id)?.map((product) => {
                           return (<Card product={product}/>);
                     })
-                  }      
+                  } 
+                  <div className='h-full flex items-center justify-center '>
+                    <span className='w-56 h-[90%] bg-slate-300 rounded-2xl flex items-center justify-center '>
+                      <span className='p-2 border-2 border-black bg-orange-500 text-white cursor-pointer hover:p-3'><Link to={`/category/${category._id}`}>VIEW MORE</Link></span>
+                    </span>    
+                  </div>
                 </div>
               </div>
           )
         })
       }
-
-      <div className='flex items-center justify-center m-4'>
-        <Link to="/products" className='border-solid border-2 border-black p-2 bg-orange-600 text-white cursor-pointer hover:text-[1.09em] transition-all duration-200 ease-out '>Explore All categories</Link> 
-      </div>
       <Footer/>
     </>
   )
 }
 
-export default Home
+export default AllProducts;

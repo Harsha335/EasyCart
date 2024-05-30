@@ -1,10 +1,11 @@
 import React from 'react'
 import LinkedInIcon from '@mui/icons-material/LinkedIn';
 import GitHubIcon from '@mui/icons-material/GitHub';
+import { Link } from 'react-router-dom';
 
 const Footer = () => {
   return (
-    <div className='bg-black w-[100%] text-white relative'>
+    <div className='bg-[#0b0a30] w-[100%] relative text-white'> {/* TODO : stick footer to end */}
         <div className='py-[0.5rem]'>
           <div className='flex flex-row justify-between px-[1em]'>
             <div className="font-ubuntu text-[1.9rem] ">
@@ -12,8 +13,8 @@ const Footer = () => {
             </div>
             <div className="font-ubuntu text-[1rem] pt-[1em] flex flex-row">
                 <div>Follows on : </div>
-                <div className='px-2'><LinkedInIcon/></div>
-                <div className='px-2'><GitHubIcon/></div>
+                <div className='px-2' ><Link to="https://github.com/Harsha335"><GitHubIcon/></Link></div>
+                <div className='px-2'><Link to="https://www.linkedin.com/in/harshavardhan-asadi-b71898220/"><LinkedInIcon/></Link></div>
             </div>
           </div>
             <div className="flex flex-row justify-center font-ubuntu text-[1rem]">

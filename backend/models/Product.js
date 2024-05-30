@@ -10,7 +10,8 @@ const ProductSchema = new mongoose.Schema({
     price: {type: Number, default: 0},
     discount: {type: Number, default: 0},
     tags: {type: [String], require: true},
-    commentsId: {type: [String]}    // comments id
+    rating: {type: Number, default: 0.0},   //average rating of a product
+    //commentsId: {type: [String]}    // comments id
 },{timestamps: true});
 
 module.exports = new mongoose.model("Product", ProductSchema);

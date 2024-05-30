@@ -2,7 +2,7 @@ import Home from "./pages/Home";
 import {BrowserRouter,Route,Routes} from "react-router-dom";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
-import Products from "./pages/Products";
+import AllProducts from "./pages/AllProducts";
 import Product from "./pages/Product";
 import AddProduct from "./pages/AddProduct";
 // import { useEffect, useState } from "react";
@@ -10,6 +10,7 @@ import AddProduct from "./pages/AddProduct";
 import { UserAuthContextProvider } from "./context/UserAuthContext";
 import ProtectedRoute from "./ProtectedRoute";
 import PageNotFound from "./pages/PageNotFound";
+import Category from "./pages/Category";
 
 function App() {
   return (
@@ -19,9 +20,10 @@ function App() {
           <Route exact path="/" element={<ProtectedRoute><Home/></ProtectedRoute>}/>  {/* TODO : CHANGE THE PROTECTED ROUTE */}
           <Route exact path="/login" element={<Login/>}/> {/* user!=null ?<Navigate to="/"/>: */}
           <Route exact path="/register" element={<Register/>}/>
-          <Route exact path="/products" element={<Products/>}/>
-          <Route exact path="/products/:id" element={<Product/>}/>
-          <Route exact path="/admin/add-product" element={<AddProduct/>}/>
+          <Route exact path="/products" element={<ProtectedRoute><AllProducts/></ProtectedRoute>}/>
+          <Route exact path="/category/:categoryId" element={<ProtectedRoute><Category/></ProtectedRoute>}/>
+          <Route exact path="/products/:productId" element={<ProtectedRoute><Product/></ProtectedRoute>}/>
+          <Route exact path="/admin/add-product" element={<ProtectedRoute><AddProduct/></ProtectedRoute>}/>
           <Route path="*" element={<PageNotFound/>}/>
         </Routes>
       </UserAuthContextProvider>

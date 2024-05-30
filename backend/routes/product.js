@@ -1,10 +1,11 @@
 const express = require('express');
-const { verifyTokenAndAdmin } = require('./verifyToken');
+const { verifyTokenAndAdmin, verifyTokenAndAuthorization } = require('./verifyToken');
 const Product = require('../models/Product');
 const router = express.Router();
 const multer = require('multer');
 const cloudinary = require('../utils/cloudinary');
 const Category = require('../models/Category');
+const Comment = require('../models/Comment');
   
 // Multer configuration
 const storage = multer.memoryStorage();
@@ -72,7 +73,18 @@ router.post("/add-category", verifyTokenAndAdmin, async (req, res) => {
     }
 });
 
-router.get("/all-categories", verifyTokenAndAdmin, async (req, res) => {
+router.get("/getCategory/:categoryId", verifyTokenAndAuthorization, async (req, res) => {
+    try{
+        const {categoryId} = req.params;
+        const data = await Category.findById(categoryId);
+        res.status(200).json(data);
+    }catch(err){
+        console.log("get categories error : ", err);
+        res.status(500).json(err);
+    }
+});
+
+router.get("/all-categories", verifyTokenAndAuthorization, async (req, res) => {
     try{
         const data = await Category.find();
         res.status(200).json(data);
@@ -81,6 +93,65 @@ router.get("/all-categories", verifyTokenAndAdmin, async (req, res) => {
         res.status(500).json(err);
     }
 });
+
+router.get("/category/:categoryId", verifyTokenAndAuthorization, async (req, res) => {
+    try{
+        const {categoryId} = req.params;
+        let {page,size} = req.query;
+        if(!page)   page = 1;
+        if(!size)   size = 5;
+                                                        //include --> 'title' , notInclude -->'-title'
+        const products = await Product.find({categoryId},'title image_url categoryId price rating').skip((page-1)*size).limit(size);
+        const totalSize = (await Product.find({categoryId})).length;
+        res.status(200).json({products, totalSize});
+    }catch(err){
+        console.log("get category products error : ", err);
+        res.status(500).json(err);
+    }
+});
+
+router.get("/:productId", verifyTokenAndAuthorization, async (req, res) => {
+    try{
+        const {productId} = req.params;
+        const product = await Product.findById(productId);
+        res.status(200).json({product});
+    }catch(err){
+        console.log("get category products error : ", err);
+        res.status(500).json(err);
+    }
+});
+
+router.post("/comment", verifyTokenAndAuthorization, async (req, res) => {
+    try{
+        const userId = req.user.id;
+        const {productId,rating,commentTitle,commentData} = req.body;
+        const comment = new Comment({userId, productId, rating, title: commentTitle, comment: commentData});
+        const newComment = await comment.save();
+        const allRatings = await Comment.find({productId},'rating -_id');
+        console.log(allRatings);
+        const avgRating = allRatings.reduce((sum,ele) => sum + ele.rating, 0)/allRatings.length;
+        const product = await Product.findById(productId);
+        product.rating = avgRating;
+        await product.save();
+        res.status(200).json({newComment});
+    }catch(err){
+        console.log("post comment error : ", err);
+        res.status(500).json(err);
+    }
+});
+
+router.get("/:productId/comment", verifyTokenAndAuthorization, async (req, res) => {
+    try{
+        const {productId} = req.params;
+        const comments = await Comment.find({productId});
+        res.status(200).json({comments});
+    }catch(err){
+        console.log("get comment error : ", err);
+        res.status(500).json(err);
+    }
+});
+
+
 
 
 module.exports = router;
