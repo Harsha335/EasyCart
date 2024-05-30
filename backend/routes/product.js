@@ -10,7 +10,7 @@ const Category = require('../models/Category');
 const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });    // use when we send data via "form-data" - separates files from other data with req.file & req.body
 
-// SAVE IMAGE INTO CLOUDINARY ARTICAL 👏 - https://medium.com/@joeeasy_/uploading-images-to-cloudinary-using-multer-and-expressjs-f0b9a4e14c54
+// SAVE IMAGE INTO CLOUDINARY ARTICLE 👏 - https://medium.com/@joeeasy_/uploading-images-to-cloudinary-using-multer-and-expressjs-f0b9a4e14c54
 const convertImageToBase64URL = (buffer, imageType = 'png') => {
     try {
       const base64String = Buffer.from(buffer).toString('base64');
@@ -21,16 +21,20 @@ const convertImageToBase64URL = (buffer, imageType = 'png') => {
 }
   
 
-router.post("/add-product", verifyTokenAndAdmin, upload.array("image"), async (req, res) => {
+router.post("/add-product", verifyTokenAndAdmin, upload.array("files"), async (req, res) => {
     // console.log("-------------------------------------------------------------------------------------------------");
     const data = req.body;  // multer splits other data from file data
     const imgs = req.files;   // multer splits other data from file data    (for a single image upload -> upload.single("image") , req.file)
-    // console.log(img);
-    if (!imgs) {
+    // console.log(req.body,req?.files);
+    // res.status(200).json({data, imgs});
+    if (!imgs || imgs.length === 0) {
         return res.status(400).json({ error: 'No image file uploaded' });
     }
     // console.log("buffer ",img.buffer);
     try{
+        // console.log("features: ", data.features);
+        // console.log("tags: ",data.tags);
+        // res.status(200).json(data);
         const cloudinary_img_urls = [];
         for(const img of imgs)
         {
@@ -45,11 +49,11 @@ router.post("/add-product", verifyTokenAndAdmin, upload.array("image"), async (r
             console.log("image url : ",cloudinary_img);
             cloudinary_img_urls.push(cloudinary_img.url);
         }
-        const newProduct = new Product({...data,features: JSON.parse(data.features), image_url: cloudinary_img_urls});
+        const newProduct = new Product({...data,features: data.features, image_url: cloudinary_img_urls});
         const savedProduct = await newProduct.save();
         res.status(201).json(savedProduct);
     }catch(err){
-        console.log("Add product error : ", err);
+        console.log("AddProduct Server error : ", err);
         res.status(500).json(err);
     }
 });
