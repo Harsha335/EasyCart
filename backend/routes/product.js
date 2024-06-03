@@ -6,6 +6,7 @@ const multer = require('multer');
 const cloudinary = require('../utils/cloudinary');
 const Category = require('../models/Category');
 const Comment = require('../models/Comment');
+const User = require('../models/User');
   
 // Multer configuration
 const storage = multer.memoryStorage();
@@ -127,10 +128,9 @@ router.post("/comment", verifyTokenAndAuthorization, async (req, res) => {
         const {productId,rating,commentTitle,commentData} = req.body;
         const comment = new Comment({userId, productId, rating, title: commentTitle, comment: commentData});
         const newComment = await comment.save();
-        const allRatings = await Comment.find({productId},'rating -_id');
-        console.log(allRatings);
-        const avgRating = allRatings.reduce((sum,ele) => sum + ele.rating, 0)/allRatings.length;
         const product = await Product.findById(productId);
+        const avgRating = (product.rating*product.ratingCount + rating)/(product.ratingCount + 1);
+        product.ratingCount = product.ratingCount + 1;
         product.rating = avgRating;
         await product.save();
         res.status(200).json({newComment});
@@ -151,6 +151,38 @@ router.get("/:productId/comment", verifyTokenAndAuthorization, async (req, res) 
     }
 });
 
+router.post("/like", verifyTokenAndAuthorization, async (req, res) => {
+    try{
+        const {productId} = req.body;
+        const userId = req.user.id;
+        const user = await User.findById(userId);
+        if(user.likedProductIds.includes(productId)){
+            res.status(200).json({message:"already added"});
+        }
+        user.likedProductIds.push(productId);
+        await user.save();
+        res.status(200).json({message: "added like successfully"});
+    }catch(err){
+        console.log("Error @post /like", err);
+    }
+});
+
+router.post("/remove-like", verifyTokenAndAuthorization, async (req, res) => {
+    try{
+        const {productId} = req.body;
+        const userId = req.user.id;
+        const user = await User.findById(userId);
+        const index = user.likedProductIds.indexOf(productId);
+        if(index === -1){
+            res.status(404).json({message:"product not found"});
+        }
+        user.likedProductIds.splice(index, 1);
+        await user.save();
+        res.status(200).json({message: "removed like successfully"});
+    }catch(err){
+        console.log("Error @post /remove-like", err);
+    }
+});
 
 
 

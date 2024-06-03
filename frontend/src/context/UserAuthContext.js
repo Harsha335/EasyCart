@@ -3,21 +3,41 @@ import { createContext, useContext, useEffect, useState } from "react";
 // import { auth } from "../assets/firebase";
 import axios from "axios";
 import CryptoJS from "crypto-js";
+import { useDispatch } from "react-redux";
+import { addUserDetails, removeUserDetails } from "../redux/reducer/UserSlice";
+import {axiosInstance} from "../Api_calls/API";
 
 const userAuthContext = createContext();
 
 export function UserAuthContextProvider({children}){
-    const [user,setUser]=useState(localStorage.getItem("user"));
+    // const [user,setUser]=useState(localStorage.getItem("user"));
+    const dispatch = useDispatch();
+
     // setUser(localStorage.getItem("userEmail"));
     const encryptData = (name, data)=> {
         const encrypt = CryptoJS.AES.encrypt(JSON.stringify(data), process.env.REACT_APP_SECRET_KEY).toString();
         localStorage.setItem(name, encrypt);
-        setUser(encrypt);
+        // setUser(encrypt);
     }
     const decryptData = (name) => {
+        
         const encrypted = localStorage.getItem(name);
         const decrypted = CryptoJS.AES.decrypt(encrypted, process.env.REACT_APP_SECRET_KEY).toString(CryptoJS.enc.Utf8);
         return JSON.parse(decrypted);
+    }
+
+    async function getUserDetails()
+    {
+        try{
+            const id = decryptData("user")?.split(" ")[2];
+            // console.log("userDetails : ",decryptData("user"));
+            const res = await axiosInstance.get(`/api/users/find/${id}`);
+            console.log("getting userDetails : ",res);
+            const { email, isAdmin, likedProductIds} = res.data.data;
+            dispatch(addUserDetails({email, isAdmin, likedProductIds}));
+        }catch(err){
+            console.log("ERROR @ UserAuthContext/getUserDetails : ",err);
+        }
     }
 
     async function signUp(emailId,password)
@@ -44,21 +64,25 @@ export function UserAuthContextProvider({children}){
                 // console.log(emailId, password);
                 // console.log("sending req to: ", `${process.env.REACT_APP_SERVER_URL}/api/auth/login`);
                 const res = await axios.post(`${process.env.REACT_APP_SERVER_URL}/api/auth/login`, {"email": emailId, password});
-                // console.log(res);
-                const {email, isAdmin, accessToken} = res.data;
-                encryptData("user", email+" "+isAdmin);
+                console.log("login : ",res);
+                const {id, email, isAdmin, accessToken, likedProductIds} = res.data;
+                dispatch(addUserDetails({email, isAdmin, likedProductIds}));
+                localStorage.removeItem("user");
+                encryptData("user", email+" "+isAdmin+" "+id);
                 // console.log(decryptData("user"));
+                localStorage.removeItem("accessToken");
                 localStorage.setItem("accessToken", accessToken);
             }catch(error){
                 console.log("ERROR @ userlogin : ", error);
             }
-        // }
-        // userLogin(emailId,password);
+            // }
+            // userLogin(emailId,password);
     }
     function logOut(){
         localStorage.removeItem("user");
         localStorage.removeItem("accessToken");
-        setUser(null);
+        dispatch(removeUserDetails());
+        // setUser(null);
     }
     function googleSignIn(){
         // const googleAuthProvider = new GoogleAuthProvider();
@@ -73,7 +97,7 @@ export function UserAuthContextProvider({children}){
     // },[]);
 
     return (
-        <userAuthContext.Provider value = {{user,logIn,signUp,logOut,googleSignIn,encryptData,decryptData}}>
+        <userAuthContext.Provider value = {{logIn,signUp,logOut,googleSignIn,encryptData,decryptData, getUserDetails}}>
             {children}
         </userAuthContext.Provider>
     )

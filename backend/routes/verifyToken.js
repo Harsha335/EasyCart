@@ -14,25 +14,27 @@ const verifyToken = (req,res,next)=>{
                 res.status(403).send({message: "Token is invalid"});
             }
             req.user = user;
+            console.log("-----------------------------------------");
+            console.log("user ",user);
             next();
         });
     }else{
-        // console.log("tokennnn");
+        console.log("no token");
         return res.status(401).json({message: "You are not authenticated"});
     }
 };
 
 const verifyTokenAndAuthorization = (req, res, next) =>{
     verifyToken(req, res, ()=>{
-        // console.log(req.user.isAdmin);
-        next();
-        // if(req.user.id === req.params.id || req.user.isAdmin)
-        // {
-        //     next();
-        // }
-        // else{
-        //     res.status(403).json({message: "You are not allowed to do that!"})
-        // }
+        console.log(req.user,req.headers);
+        if(req.user.id === req.headers.id || req.user.isAdmin)
+        {
+            next();
+        }
+        else{
+            console.log("user does not match");
+            res.status(403).json({message: "You are not allowed to do that!"})
+        }
     })
 }
 
@@ -44,6 +46,7 @@ const verifyTokenAndAdmin = (req, res, next) =>{
             next();
         }
         else{
+            console.log("Not a Admin");
             res.status(403).json({message: "You are not allowed to do that!"})
         }
     })

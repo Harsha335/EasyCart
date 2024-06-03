@@ -2,21 +2,20 @@ import React, { useEffect, useState } from 'react'
 import Navbar from '../Components/Navbar'
 import Card from '../Components/Card'
 import Footer from '../Components/Footer'
-import axios from 'axios'
+// import axios from 'axios'
 import { Link } from 'react-router-dom'
+// import { useUserAuth } from "../context/UserAuthContext";
+import {axiosInstance} from "../Api_calls/API";
 
 const AllProducts = () => {
   const [categories, setCategories] = useState([]);
   const [products, setProducts] = useState([]);
+  // const { decryptData } = useUserAuth();
+
   useEffect(()=>{
     const getCategories = async () => {
       try{
-        const config = {
-          headers: {
-            token : `Bearer ${localStorage.getItem('accessToken')}`
-          }
-        }
-        const response = await axios.get(`${process.env.REACT_APP_SERVER_URL}/api/product/all-categories`,config);
+        const response = await axiosInstance.get(`/api/product/all-categories`);
         // console.log("categories : ",response.data);
         setCategories(response.data);
       }catch(err){
@@ -31,13 +30,8 @@ const AllProducts = () => {
       for(const category of categories){
         // console.log("getting category: ", category.title);
         try{
-          const config = {
-            headers: {
-              token : `Bearer ${localStorage.getItem('accessToken')}`
-            }
-          }
           const id = category._id;
-          const response = await axios.get(`${process.env.REACT_APP_SERVER_URL}/api/product/category/${id}/?page=1&size=4`,config);
+          const response = await axiosInstance.get(`/api/product/category/${id}/?page=1&size=4`);
           const data = {id , products : response.data.products};
           // console.log(data);
           // setProducts(prev => [...prev, ...data]);

@@ -12,6 +12,7 @@ const ProductSchema = new mongoose.Schema({
     tags: {type: [String], require: true},
     rating: {type: Number, default: 0.0},   //average rating of a product
     //commentsId: {type: [String]}    // comments id
+    ratingCount: {type: Number, default: 0},    // number of reviews added
 },{timestamps: true});
 
 module.exports = new mongoose.model("Product", ProductSchema);

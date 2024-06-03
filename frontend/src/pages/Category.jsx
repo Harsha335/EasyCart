@@ -2,12 +2,15 @@ import React, { useEffect, useState } from "react";
 import Navbar from "../Components/Navbar";
 import Card from "../Components/Card";
 import Footer from "../Components/Footer";
-import axios from "axios";
+// import axios from "axios";
 import { useParams, useSearchParams } from "react-router-dom";
 import Pagination from "../Components/Pagination";
+import { useUserAuth } from "../context/UserAuthContext";
+import {axiosInstance} from "../Api_calls/API";
 
 const Category = () => {
   const { categoryId } = useParams();
+  const { decryptData } = useUserAuth();
 
   const DEFAULT_PAGE_NO = 1;
   const DEFAULT_PAGE_SIZE = 10;
@@ -23,14 +26,8 @@ const Category = () => {
   const [products, setProducts] = useState([]);
   useEffect(() => {
     const getCategoryName = async () => {
-      const config = {
-        headers: {
-          token: `Bearer ${localStorage.getItem("accessToken")}`,
-        },
-      };
-      const response = await axios.get(
-        `${process.env.REACT_APP_SERVER_URL}/api/product/getCategory/${categoryId}`,
-        config
+      const response = await axiosInstance.get(
+        `/api/product/getCategory/${categoryId}`
       );
       setCategoryName(response.data.title);
     };
@@ -40,14 +37,8 @@ const Category = () => {
   useEffect(() => {
     const getProducts = async () => {
       try {
-        const config = {
-          headers: {
-            token: `Bearer ${localStorage.getItem("accessToken")}`,
-          },
-        };
-        const response = await axios.get(
-          `${process.env.REACT_APP_SERVER_URL}/api/product/category/${categoryId}/?page=${page}&size=${size}`,
-          config
+        const response = await axiosInstance.get(
+          `/api/product/category/${categoryId}/?page=${page}&size=${size}`
         );
         console.log(response);
         const data = response.data.products;

@@ -36,13 +36,14 @@ router.post("/login", async (req,res)=>{
         const accessToken = jwt.sign({
             id: user._id,
             isAdmin: user.isAdmin
-        },process.env.JWT_SECRET,{expiresIn: "3d"});
+        },process.env.JWT_SECRET,{expiresIn: "1d"});
 
         //  FOR SECURITY REASONS WE ARE NOT GOING TO SEND PASSWORD IN USER OBJECT
         // const {password, ...others} = user._doc;    // IN DB ALL THE USER DATA WOULD BE STORED IN _DOC
 
         // res.status(200).json({...others, accessToken});
-        const data = {email : user.email, isAdmin: user.isAdmin, accessToken};
+        const {id, email, isAdmin, likedProductIds} = user;
+        const data = {id, email, isAdmin, likedProductIds, accessToken};
         res.status(200).json(data);
     }
     catch(err){

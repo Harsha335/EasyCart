@@ -4,22 +4,22 @@ import Slider from '../Components/Slider'
 import Card from '../Components/Card'
 import Footer from '../Components/Footer'
 import { Link } from 'react-router-dom'
-import axios from 'axios'
+// import axios from 'axios'
+// import { useUserAuth } from "../context/UserAuthContext";
+import {axiosInstance} from "../Api_calls/API";
 
 const Home = () => {
   const [categories, setCategories] = useState([]);
   const [products, setProducts] = useState([]);
+  // const { decryptData } = useUserAuth();
+
   useEffect(()=>{
     const getCategories = async () => {
       try{
-        const config = {
-          headers: {
-            token : `Bearer ${localStorage.getItem('accessToken')}`
-          }
-        }
-        const response = await axios.get(`${process.env.REACT_APP_SERVER_URL}/api/product/all-categories`,config);
+        const response = await axiosInstance.get(`/api/product/all-categories`);
         // console.log("categories : ",response.data);
-        setCategories(response.data);
+        const data = response.data;
+        setCategories(data.slice(0,3));  // TAKING ONLY TOP 3 CATEGORIES
       }catch(err){
         console.log(err);
       }
@@ -32,13 +32,8 @@ const Home = () => {
       for(const category of categories){
         // console.log("getting category: ", category.title);
         try{
-          const config = {
-            headers: {
-              token : `Bearer ${localStorage.getItem('accessToken')}`
-            }
-          }
           const id = category._id;
-          const response = await axios.get(`${process.env.REACT_APP_SERVER_URL}/api/product/category/${id}/?page=1&size=5`,config);
+          const response = await axiosInstance.get(`/api/product/category/${id}/?page=1&size=5`);
           const data = {id , products : response.data.products};
           // console.log(data);
           // setProducts(prev => [...prev, ...data]);

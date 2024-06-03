@@ -1,4 +1,6 @@
 import { Rating } from "@mui/material";
+import FavoriteTwoToneIcon from '@mui/icons-material/FavoriteTwoTone';
+import FavoriteIcon from "@mui/icons-material/Favorite";
 import React, { useEffect, useState } from "react";
 import Navbar from "../Components/Navbar";
 import AddIcon from "@mui/icons-material/Add";
@@ -7,24 +9,24 @@ import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import Card from "../Components/Card";
 import { Link, useParams } from "react-router-dom";
 import Footer from "../Components/Footer";
-import axios from "axios";
+// import axios from "axios";
 import { useUserAuth } from "../context/UserAuthContext";
+import { useDispatch, useSelector } from "react-redux";
+import { addToCart, removeFromCart } from "../redux/reducer/CartSlice";
+import {axiosInstance} from "../Api_calls/API";
+import { addLikedProduct, removeLikedProduct } from "../redux/reducer/UserSlice";
 
 const Product = () => {
   const { productId } = useParams();
+  const dispatch = useDispatch();
+  const { decryptData } = useUserAuth();
 
   const [product, setProduct] = useState([]);
   useEffect(() => {
     const getProduct = async () => {
       try {
-        const config = {
-          headers: {
-            token: `Bearer ${localStorage.getItem("accessToken")}`,
-          },
-        };
-        const response = await axios.get(
-          `${process.env.REACT_APP_SERVER_URL}/api/product/${productId}`,
-          config
+        const response = await axiosInstance.get(
+          `/api/product/${productId}`
         );
         console.log("response @ product.jsx - product : ", response);
         const data = response.data?.product;
@@ -40,14 +42,8 @@ const Product = () => {
   useEffect(() => {
     const getComments = async () => {
       try {
-        const config = {
-          headers: {
-            token: `Bearer ${localStorage.getItem("accessToken")}`,
-          },
-        };
-        const response = await axios.get(
-          `${process.env.REACT_APP_SERVER_URL}/api/product/${productId}/comment`,
-          config
+        const response = await axiosInstance.get(
+          `/api/product/${productId}/comment`
         );
         console.log("response @ product.jsx - comments : ", response);
         const data = response.data.comments;
@@ -58,18 +54,59 @@ const Product = () => {
       }
     };
     getComments();
-  }, []);
+  }, [productId]);
+
+  const numberFormatter = (number) => {
+    const formatter = new Intl.NumberFormat('en-IN');
+    return formatter.format(number);
+  }
+
+  const liked = useSelector(store => store.userReducer.userDetails.likedProductIds).includes(productId);
+  const postLiked = async () => {
+    // alert(liked);
+    try{
+      if(liked === false){
+        // request to like a comment // --> /api/product/like
+        const res = await axiosInstance.post(`/api/product/like`,{productId});
+        dispatch(addLikedProduct({productId}));
+        console.log(res);
+      }else{
+        // request to like a comment // --> /api/product/remove-like
+        const res = await axiosInstance.post(`/api/product/remove-like`,{productId});
+        dispatch(removeLikedProduct({productId}));
+        console.log(res);
+      }
+      // setLiked(!liked);
+    }catch(err){
+      console.log("ERROR @ postLiked product.jsx : ",err);
+    }
+  }
 
   const [imgIndex, setImgIndex] = useState(0);
 
-  const [addCart, setAddCart] = useState(false);
-  const [addedCount, setAddedCount] = useState(1);
-  useEffect(() => {
-    if (addedCount === 0) {
-      setAddCart(false);
-      setAddedCount(1);
+  const cartDetails = useSelector(store => store.cartReducer.cartItems).filter(product => {
+    return product.productId === productId
+  })[0];
+  // console.log("cartDetails ",cartDetails);
+  const [addedCount, setAddedCount] = useState(cartDetails === undefined ? 1 : cartDetails.quantity);
+  const updateCartCount = (count) => {
+    if(count >= 1 && count <= product.quantity){
+      setAddedCount(count);
     }
-  }, [addedCount]);
+  }
+  const postAddedToCart = () => { // send request to update cart (LOCALLY)
+    if(addedCount <= 0 || addedCount > product.quantity){
+      alert("invalid cart added");
+      return;
+    }
+    dispatch(addToCart({productId, quantity: addedCount}));
+    console.log("added to cart ");
+  }
+  const postRemoveFromCart = () => {
+    dispatch(removeFromCart({productId}));
+    setAddedCount(1);
+    console.log("removed from cart ");
+  }
 
   const getDate = (date) => {
     // alert(new Date());
@@ -82,7 +119,7 @@ const Product = () => {
     return `${currentDay}-${currentMonth}-${currentYear}`;
   };
 
-  const { decryptData } = useUserAuth();
+  
   const [userEmail, setUserEmail] = useState("");
   useEffect(() => {
     setUserEmail(decryptData("user").split(" ")[0]);
@@ -101,16 +138,10 @@ const Product = () => {
   const postComment = () => {
     const submitComment = async () => {
       try {
-        const config = {
-          headers: {
-            token: `Bearer ${localStorage.getItem("accessToken")}`,
-          },
-        };
         const data = { productId, rating, commentTitle, commentData };
-        await axios.post(
-          `${process.env.REACT_APP_SERVER_URL}/api/product/comment`,
-          data,
-          config
+        await axiosInstance.post(
+          `/api/product/comment`,
+          data
         );
         clearComment();
         alert("Comment added 😉");
@@ -129,7 +160,13 @@ const Product = () => {
       <Navbar />
       <div className=" w-[100%] flex flex-col md:flex-row">
         {/* picture */}
-        <div className="h-[75vh] flex-1 flex flex-col">
+        <div className="relative h-[75vh] flex-1 flex flex-col">
+          {/* LIKE */}
+          <span className="absolute top-5 right-5 cursor-pointer" onClick={()=>{postLiked();}}>
+            { !liked && <FavoriteTwoToneIcon style={{color:"black"}}  sx={{fontSize:"2rem"}}/> }
+            { liked && <FavoriteIcon style={{color:"red"}}  sx={{fontSize:"2rem"}}/> }
+            {/* className="transition-hover duration-1000 ease-in-out" */}
+          </span>
           {/* main picture */}
           <div className="h-[80%] m-auto p-2">
             <img
@@ -169,14 +206,14 @@ const Product = () => {
                 readOnly
                 value={product?.rating}
               />
-              ({comments.length}) reviews
+              ({product?.ratingCount}) reviews
             </div>
           </div>
           <div className="flex flex-row mb-4">
             <span className=" font-semibold mr-5 text-2xl">
-              ₹ {(product.price * (100 - product.discount)) / 100}{" "}
+              ₹ {numberFormatter(product.price * (100 - product.discount) / 100)}{" "}
             </span>
-            <span className="line-through mr-5"> ₹{product.price} </span>
+            <span className="line-through mr-5"> ₹{numberFormatter(product.price)} </span>
             <span className="font-semibold"> {product.discount}% off</span>
           </div>
           <div>
@@ -212,49 +249,55 @@ const Product = () => {
               }`}
             >
               {product.quantity > 0
-                ? ` ${product.quantity} in stock`
+                ? ` ${numberFormatter(product.quantity)} in stock`
                 : " OUT OF STOCK"}
             </span>
           </div>
-          <div className="flex flex-row my-4">
-            <div className="mr-8">
-              {!addCart && (
-                <span
-                  className="bg-yellow-500 p-2 rounded-md cursor-pointer hover:text-[1.09em] transition-all duration-200 ease-in text-white"
-                  onClick={() => {
-                    setAddCart(!addCart);
-                  }}
-                >
-                  Add to Cart
-                </span>
-              )}
-              {addCart && (
+          <div className="flex flex-row gap-8 p-4 items-center">
+            {/* <div className=""> */}
                 <div>
                   <span
-                    className="cursor-pointer p-2 bg-slate-200 rounded-md"
+                    className={`p-2 bg-slate-200 rounded-md ${addedCount === 1 ? "cursor-not-allowed" : "cursor-pointer"}`}
                     onClick={() => {
-                      setAddedCount(addedCount - 1);
+                      updateCartCount(addedCount - 1);
                     }}
                   >
                     <RemoveIcon />
                   </span>
                   <span className="m-4">{addedCount}</span>
                   <span
-                    className="cursor-pointer p-2 bg-slate-200 rounded-md"
+                    className={`p-2 bg-slate-200 rounded-md ${addedCount === product.quantity ? "cursor-not-allowed" : "cursor-pointer"}`}
                     onClick={() => {
-                      setAddedCount(addedCount + 1);
+                      updateCartCount(addedCount + 1);
                     }}
                   >
                     <AddIcon />
                   </span>
                 </div>
-              )}
-            </div>
-            <div className="">
+                <span
+                  className="bg-orange-500 p-2 rounded-md cursor-pointer hover:text-[1.09em] transition-all duration-200 ease-in text-white"
+                  onClick={() => {
+                    postAddedToCart()
+                  }}
+                >
+                  {cartDetails === undefined ? "Add to Cart" : "Update Cart"}
+                </span>
+                {cartDetails &&
+                <span
+                  className="bg-yellow-500 p-2 rounded-md cursor-pointer hover:text-[1.09em] hover:bg-red-500 transition-all duration-200 ease-in text-white"
+                  onClick={() => {
+                    postRemoveFromCart()
+                  }}
+                >
+                  Remove from Cart  
+                  {/* TODO: remove icon */}
+                </span>}
+            {/* </div> */}
+            {/* <div className="">
               <span className="bg-orange-500 p-2 rounded-md cursor-pointer hover:text-[1.09em] transition-all duration-200 ease-in text-white">
                 Buy now
               </span>
-            </div>
+            </div> */}
           </div>
         </div>
       </div>

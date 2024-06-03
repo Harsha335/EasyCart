@@ -3,6 +3,8 @@ import React from "react";
 const Pagination = ({ currPage, setSearchParams, totalPages, size }) => {
     // alert(totalPages);
   return (
+    <div className="flex flex-row justify-between">
+      <span></span>
     <div className="flex items-center justify-center gap-4 ">
       <button
         className="w-9 h-10 border-black border-2 rounded-md font-bold text-2xl"
@@ -98,6 +100,8 @@ const Pagination = ({ currPage, setSearchParams, totalPages, size }) => {
         {"»"}
         {/* &#187; */}
       </button>
+    </div>
+    <span className="pr-4">Page <span className="border-2 border-black px-[0.3rem] py-[0.1rem]">{currPage}</span> of {totalPages}</span>
     </div>
   );
 };

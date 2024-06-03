@@ -11,6 +11,7 @@ import { UserAuthContextProvider } from "./context/UserAuthContext";
 import ProtectedRoute from "./ProtectedRoute";
 import PageNotFound from "./pages/PageNotFound";
 import Category from "./pages/Category";
+import ProtectedAdminRoute from "./ProtectedAdminRoute";
 
 function App() {
   return (
@@ -23,7 +24,7 @@ function App() {
           <Route exact path="/products" element={<ProtectedRoute><AllProducts/></ProtectedRoute>}/>
           <Route exact path="/category/:categoryId" element={<ProtectedRoute><Category/></ProtectedRoute>}/>
           <Route exact path="/products/:productId" element={<ProtectedRoute><Product/></ProtectedRoute>}/>
-          <Route exact path="/admin/add-product" element={<ProtectedRoute><AddProduct/></ProtectedRoute>}/>
+          <Route exact path="/admin/add-product" element={<ProtectedAdminRoute><AddProduct/></ProtectedAdminRoute>}/>
           <Route path="*" element={<PageNotFound/>}/>
         </Routes>
       </UserAuthContextProvider>

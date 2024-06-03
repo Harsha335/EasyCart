@@ -25,7 +25,7 @@ const Login = () => {
   const visibility = () => {
     setVisible(!visible);
   };
-  const {user, logIn,googleSignIn} = useUserAuth();
+  const { logIn,googleSignIn} = useUserAuth();
   const handleLogin = async (e)=>{
     e.preventDefault();
     setError("");

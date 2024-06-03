@@ -5,21 +5,18 @@ import CancelSharpIcon from "@mui/icons-material/CancelSharp";
 import DeleteOutlineTwoToneIcon from '@mui/icons-material/DeleteOutlineTwoTone';
 import addProduct from "../assets/images/addProduct.jpg";
 import axios from "axios";
+import { useUserAuth } from "../context/UserAuthContext";
+import {axiosInstance} from "../Api_calls/API";
 
 const AddProduct = () => {
   const [title, setTitle] = useState('');
   const [category, setCategory] = useState([]); // get category list
+  const { decryptData } = useUserAuth();
   useEffect(() => {
     const getCategory = async () => {
       try {
-        const config = {
-          headers: {
-            token: "Bearer " + localStorage.getItem("accessToken"),
-          },
-        };
-        const data = await axios.get(
-          `${process.env.REACT_APP_SERVER_URL}/api/product/all-categories`,
-          config
+        const data = await axiosInstance.get(
+          `/api/product/all-categories`,
         );
         // console.log(data);
         setCategory(data.data);
@@ -109,6 +106,7 @@ const AddProduct = () => {
           headers: {
             "Content-Type": "multipart/form-data",
             token: "Bearer " + localStorage.getItem("accessToken"),
+            id: `${decryptData("user")[2]}`
           }, 
           onUploadProgress: (progressEvent) => {  // TODO : NOT WORKING -DIRECT 100% GIVING
             const { loaded, total } = progressEvent;

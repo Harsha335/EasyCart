@@ -4,13 +4,16 @@ import MenuTwoToneIcon from '@mui/icons-material/MenuTwoTone';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import { Link } from "react-router-dom";
 import { useUserAuth } from "../context/UserAuthContext";
+import { useSelector } from "react-redux";
 // import { auth } from "../assets/firebase";
 
 const Navbar = () => {
   const [userLogined,setUserLogined]=useState(false);
   // const navigate = useNavigate();
 
-  const {user,logOut}=useUserAuth();
+  const {logOut}=useUserAuth();
+  
+  const userDetails = useSelector(store => store.userReducer.userDetails);
   const handleLogOut = async ()=>{
     try{
       await logOut();
@@ -22,7 +25,7 @@ const Navbar = () => {
     }
   }
   useEffect(()=>{
-    if(user)
+    if(userDetails)
       setUserLogined(true);
     else
       setUserLogined(false);
