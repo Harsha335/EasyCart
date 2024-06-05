@@ -8,10 +8,10 @@ const verifyToken = (req,res,next)=>{
     if(authHeader){
         const token = authHeader.split(" ")[1];
         jwt.verify(token, process.env.JWT_SECRET, (err, user)=>{
-            if(err)
+            if(err || user === undefined)
             {
                 console.log(err);
-                res.status(403).send({message: "Token is invalid"});
+                return res.status(403).send({message: "Token is invalid"});
             }
             req.user = user;
             console.log("-----------------------------------------");
@@ -27,7 +27,7 @@ const verifyToken = (req,res,next)=>{
 const verifyTokenAndAuthorization = (req, res, next) =>{
     verifyToken(req, res, ()=>{
         console.log(req.user,req.headers);
-        if(req.user.id === req.headers.id || req.user.isAdmin)
+        if(req.user.id === req.headers?.id || req.user.isAdmin)
         {
             next();
         }

@@ -111,13 +111,18 @@ router.get("/category/:categoryId", verifyTokenAndAuthorization, async (req, res
     }
 });
 
+// GET product details by prodId
 router.get("/:productId", verifyTokenAndAuthorization, async (req, res) => {
     try{
         const {productId} = req.params;
+        if(!productId){
+            return res.status(200).json({message: "Failed to fetch product id"});
+        }
+        // console.log("product-Id : ", productId);
         const product = await Product.findById(productId);
         res.status(200).json({product});
     }catch(err){
-        console.log("get category products error : ", err);
+        console.log("get products by id error : ", err);
         res.status(500).json(err);
     }
 });
@@ -154,10 +159,14 @@ router.get("/:productId/comment", verifyTokenAndAuthorization, async (req, res) 
 router.post("/like", verifyTokenAndAuthorization, async (req, res) => {
     try{
         const {productId} = req.body;
+        if(!productId){
+            return res.status(404).json({message:"no product id is provided"});
+        }
         const userId = req.user.id;
         const user = await User.findById(userId);
+        // console.log(user.likedProductIds.includes(productId),productId);
         if(user.likedProductIds.includes(productId)){
-            res.status(200).json({message:"already added"});
+            return res.status(200).json({message:"already added"});
         }
         user.likedProductIds.push(productId);
         await user.save();
@@ -173,8 +182,9 @@ router.post("/remove-like", verifyTokenAndAuthorization, async (req, res) => {
         const userId = req.user.id;
         const user = await User.findById(userId);
         const index = user.likedProductIds.indexOf(productId);
+        console.log(user.likedProductIds.indexOf(productId),productId);
         if(index === -1){
-            res.status(404).json({message:"product not found"});
+            return res.status(404).json({message:"product not found"});
         }
         user.likedProductIds.splice(index, 1);
         await user.save();
@@ -184,6 +194,47 @@ router.post("/remove-like", verifyTokenAndAuthorization, async (req, res) => {
     }
 });
 
+router.get("/search/:searchText", async (req, res) => {
+    try{
+        const {searchText} = req.params;
+        const {categoryId,sort,rating,minPrice,maxPrice} = req.query;
+        // categoryId = Object(categoryId);
+        console.log(req.query);
+        // console.log(categoryId,filter,rating,minPrice,maxPrice);
+        // console.log(!rating , !minPrice , !maxPrice);
+        // Ensure required query parameters are provided
+        if (!rating || !minPrice || !maxPrice) {
+            return res.status(400).json({ success: false, message: "Rating, minPrice, and maxPrice are required." });
+        }
 
+        // Create an array of query conditions
+        const queryConditions = [
+            { tags: { $in: searchText.split(" ") } },
+            { rating: { $gte: Number(rating) } },
+            { price: { $gte: Number(minPrice) } },
+            { price: { $lte: Number(maxPrice) } }
+        ];
+
+        // Add categoryId condition if provided, else include all categories
+        if (categoryId !== 'null') {
+            queryConditions.push({ categoryId });
+        }
+        console.log("queryConditions ",queryConditions);
+        // Determine sort criteria
+        let sortCriteria = {};
+        if (sort === 'LtoH') {  // low to high
+            sortCriteria = { price: 1 };
+        } else if (sort === 'HtoL') {   // high to low
+            sortCriteria = { price: -1 };
+        } else if (sort === 'new') {    // latest arrival products
+            sortCriteria = { createdAt: -1 };
+        }
+        console.log("sortCriteria ",sortCriteria);
+        const data = await Product.find({$and : queryConditions}).sort(sortCriteria);
+        res.status(200).json({data,success: true});
+    }catch(err){
+        console.log("Error server @/search ",err);
+    }
+});
 
 module.exports = router;

@@ -29,12 +29,19 @@ router.delete("/:id", verifyTokenAndAuthorization, async (req, res)=>{
     }
 });
 
-//GET, find user with id - Admin
+//GET, find user with id - Admin/user
 router.get("/find/:id", verifyTokenAndAuthorization,async (req, res)=>{
-    console.log("-------------------------------------------------------------");
-    console.log(req.params);
+    // console.log("-------------------------------------------------------------");
+    // console.log(req.params);
     try{
-        const user = await User.findById(req.params.id);
+        const {id} = req.params;
+        if(!id){
+            return res.status(400).json({"success": false, "message":`cannot find users id`});
+        }
+        const user = await User.findById(id);
+        if(!user){
+            return res.status(404).json({"success": false, "message":`cannot find user with id ${req.params.id}`});
+        }
         const {password, ...data} = user._doc;
         res.status(200).json({"success":true, data});
     }catch(err){

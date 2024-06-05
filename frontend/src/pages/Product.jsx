@@ -253,52 +253,55 @@ const Product = () => {
                 : " OUT OF STOCK"}
             </span>
           </div>
-          <div className="flex flex-row gap-8 p-4 items-center">
-            {/* <div className=""> */}
-                <div>
+          {
+            product.quantity > 0 && 
+            <div className="flex flex-row gap-8 p-4 items-center">
+              {/* <div className=""> */}
+                  <div>
+                    <span
+                      className={`p-2 bg-slate-200 rounded-md ${addedCount === 1 ? "cursor-not-allowed" : "cursor-pointer"}`}
+                      onClick={() => {
+                        updateCartCount(addedCount - 1);
+                      }}
+                    >
+                      <RemoveIcon />
+                    </span>
+                    <span className="m-4">{addedCount}</span>
+                    <span
+                      className={`p-2 bg-slate-200 rounded-md ${addedCount === product.quantity ? "cursor-not-allowed" : "cursor-pointer"}`}
+                      onClick={() => {
+                        updateCartCount(addedCount + 1);
+                      }}
+                    >
+                      <AddIcon />
+                    </span>
+                  </div>
                   <span
-                    className={`p-2 bg-slate-200 rounded-md ${addedCount === 1 ? "cursor-not-allowed" : "cursor-pointer"}`}
+                    className="bg-orange-500 p-2 rounded-md cursor-pointer hover:text-[1.09em] transition-all duration-200 ease-in text-white"
                     onClick={() => {
-                      updateCartCount(addedCount - 1);
+                      postAddedToCart()
                     }}
                   >
-                    <RemoveIcon />
+                    {cartDetails === undefined ? "Add to Cart" : "Update Cart"}
                   </span>
-                  <span className="m-4">{addedCount}</span>
+                  {cartDetails &&
                   <span
-                    className={`p-2 bg-slate-200 rounded-md ${addedCount === product.quantity ? "cursor-not-allowed" : "cursor-pointer"}`}
+                    className="bg-yellow-500 p-2 rounded-md cursor-pointer hover:text-[1.09em] hover:bg-red-500 transition-all duration-200 ease-in text-white"
                     onClick={() => {
-                      updateCartCount(addedCount + 1);
+                      postRemoveFromCart()
                     }}
                   >
-                    <AddIcon />
-                  </span>
-                </div>
-                <span
-                  className="bg-orange-500 p-2 rounded-md cursor-pointer hover:text-[1.09em] transition-all duration-200 ease-in text-white"
-                  onClick={() => {
-                    postAddedToCart()
-                  }}
-                >
-                  {cartDetails === undefined ? "Add to Cart" : "Update Cart"}
+                    Remove from Cart  
+                    {/* TODO: remove icon */}
+                  </span>}
+              {/* </div> */}
+              {/* <div className="">
+                <span className="bg-orange-500 p-2 rounded-md cursor-pointer hover:text-[1.09em] transition-all duration-200 ease-in text-white">
+                  Buy now
                 </span>
-                {cartDetails &&
-                <span
-                  className="bg-yellow-500 p-2 rounded-md cursor-pointer hover:text-[1.09em] hover:bg-red-500 transition-all duration-200 ease-in text-white"
-                  onClick={() => {
-                    postRemoveFromCart()
-                  }}
-                >
-                  Remove from Cart  
-                  {/* TODO: remove icon */}
-                </span>}
-            {/* </div> */}
-            {/* <div className="">
-              <span className="bg-orange-500 p-2 rounded-md cursor-pointer hover:text-[1.09em] transition-all duration-200 ease-in text-white">
-                Buy now
-              </span>
-            </div> */}
-          </div>
+              </div> */}
+            </div>
+          }
         </div>
       </div>
 

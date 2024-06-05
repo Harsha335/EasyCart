@@ -31,7 +31,8 @@ const Category = () => {
       );
       setCategoryName(response.data.title);
     };
-    getCategoryName();
+    if(categoryId != null)
+      getCategoryName();
   }, [categoryId]);
 
   useEffect(() => {
@@ -49,7 +50,8 @@ const Category = () => {
         console.log(err);
       }
     };
-    getProducts();
+    if(categoryId != null)
+      getProducts();
   }, [categoryId, page, size]);
 
   if (products.length === 0) return <div>Loading...</div>;

@@ -12,7 +12,7 @@ const decryptData = (name) => {
     const decrypted = CryptoJS.AES.decrypt(encrypted, process.env.REACT_APP_SECRET_KEY).toString(CryptoJS.enc.Utf8);
     return JSON.parse(decrypted);
 }
-console.log("accessToken1 ",localStorage.getItem("accessToken"));
+// console.log("accessToken1 ",localStorage.getItem("accessToken"));
 
 // Create an instance of Axios with default settings
 const axiosInstance = axios.create({
@@ -34,6 +34,7 @@ axiosInstance.interceptors.request.use(
         if (userId) {
             config.headers['id'] = userId;
         }
+        // console.log("config : ", config);
         return config;
     },
     (error) => {

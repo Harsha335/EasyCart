@@ -1,4 +1,4 @@
-import { createContext, useContext, useEffect, useState } from "react";
+import { createContext, useContext } from "react";
 // import {createUserWithEmailAndPassword,signInWithEmailAndPassword,signOut,onAuthStateChanged,GoogleAuthProvider,signInWithPopup} from "firebase/auth";
 // import { auth } from "../assets/firebase";
 import axios from "axios";
@@ -30,10 +30,14 @@ export function UserAuthContextProvider({children}){
     {
         try{
             const id = decryptData("user")?.split(" ")[2];
+            console.log(decryptData("user"));
+            console.log("id::",id);
+            if(!id)
+                return;
             // console.log("userDetails : ",decryptData("user"));
             const res = await axiosInstance.get(`/api/users/find/${id}`);
             console.log("getting userDetails : ",res);
-            const { email, isAdmin, likedProductIds} = res.data.data;
+            const { email, isAdmin, likedProductIds} = res.data?.data;
             dispatch(addUserDetails({email, isAdmin, likedProductIds}));
         }catch(err){
             console.log("ERROR @ UserAuthContext/getUserDetails : ",err);
@@ -67,10 +71,10 @@ export function UserAuthContextProvider({children}){
                 console.log("login : ",res);
                 const {id, email, isAdmin, accessToken, likedProductIds} = res.data;
                 dispatch(addUserDetails({email, isAdmin, likedProductIds}));
-                localStorage.removeItem("user");
+                // localStorage.removeItem("user");
                 encryptData("user", email+" "+isAdmin+" "+id);
                 // console.log(decryptData("user"));
-                localStorage.removeItem("accessToken");
+                // localStorage.removeItem("accessToken");
                 localStorage.setItem("accessToken", accessToken);
             }catch(error){
                 console.log("ERROR @ userlogin : ", error);

@@ -21,10 +21,10 @@ const ProtectedAdminRoute = ({children}) => {
 
     const isAdmin = user.isAdmin;
     console.log("isAdmin : ",isAdmin);
-    if(isAdmin === "false"){
+    if(isAdmin === false){
         return <Navigate to = "/"/>
     }
     return children;
 }
 
-export default ProtectedAdminRoute
+export default ProtectedAdminRoute;

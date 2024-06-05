@@ -113,7 +113,7 @@ const AddProduct = () => {
             const percentage = Math.floor((loaded * 100) / total);
             console.log('percentage => ', percentage);
             setUploadProgress(percentage);
-          },    
+          },
         };
         const data = await axios.post(
           `${process.env.REACT_APP_SERVER_URL}/api/product/add-product`,
