@@ -53,7 +53,7 @@ const Search = () => {
     const [categoryId, setCategoryId] = useState("null");
     const [rating, setRating] = useState(0);
     const [filterSort ,setFilterSort] = useState("null");
-    const [products, setProducts] = useState();
+    const [products, setProducts] = useState([]);
     const sendSearch = async (e) => {
         e.preventDefault();
         setSearchText(searchText.trim());
@@ -70,9 +70,9 @@ const Search = () => {
     <div>
       <Navbar/>
       <div>
-        <div className='flex items-center justify-center p-2 shadow-md'>
+        <div className='flex items-center justify-center p-2'>
             <span className=' border-black border-2 rounded-md'>
-                <input type='text' value={searchText} onChange={e => setSearchText(e.target.value)} className='p-2 focus:outline-none rounded-md' size="70"/>
+                <input type='text' value={searchText} placeholder='Search...' onChange={e => setSearchText(e.target.value)} className='p-2 focus:outline-none rounded-md' size="70"/>
                 <span className='p-2 bg-orange-400 rounded-md cursor-pointer border-y-2 border-l-2 active:border-0 border-black' onClick={e => sendSearch(e)}>
                     <SearchIcon/>
                 </span>
@@ -80,8 +80,8 @@ const Search = () => {
         </div>
         <div className='flex'>
             {/* FEATURES */}
-            <div className='flex-none w-80 flex flex-col gap-5 p-4 shadow-2xl'>
-                <span className='flex items-center justify-center  font-ubuntu text-xl font-medium'>
+            <div className='flex-none w-80 flex flex-col gap-5 p-4 shadow-md'>
+                <span className='flex items-center justify-center font-ubuntu text-xl font-medium'>
                     FILTERS
                 </span>
                 <span className='flex flex-col gap-3'>
@@ -147,15 +147,15 @@ const Search = () => {
             </div>
             {/* PRODUCTS */}
             {
-                products ?
-                <div className="flex-1 bg-neutral-100 p-2 rounded-[10px] shadow-inner grid grid-cols-5 overflow-auto">
+                products.length !== 0 ?
+                <div className="flex-1 bg-neutral-100 p-2 rounded-[10px] shadow-inner grid grid-cols-4 gap-y-8 overflow-auto">
                     {products.map((product) => {
                         return <Card product={product} />;
                     })}
-                    {/*  ADDED PAGINATION   */}
+                    {/* TODO : ADD PAGINATION   */}
                 </div>
                 :
-                <div className='flex-1 flex items-center justify-center'>
+                <div className='flex-1 g-neutral-100 p-2 rounded-[10px] shadow-inner flex items-center justify-center'>
                     <img src={noItem} className='w-[60%]'/>
                 </div>
             }

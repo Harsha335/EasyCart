@@ -14,6 +14,7 @@ import Category from "./pages/Category";
 import ProtectedAdminRoute from "./ProtectedAdminRoute";
 import WishList from "./pages/WishList";
 import Search from "./pages/Search";
+import Cart from "./pages/Cart";
 
 function App() {
   return (
@@ -26,6 +27,7 @@ function App() {
           <Route exact path="/products" element={<ProtectedRoute><AllProducts/></ProtectedRoute>}/>
           <Route exact path="/wishList" element={<ProtectedRoute><WishList/></ProtectedRoute>}/>
           <Route exact path="/search" element={<ProtectedRoute><Search/></ProtectedRoute>}/>
+          <Route exact path="/cart" element={<ProtectedRoute><Cart/></ProtectedRoute>}/>
           <Route exact path="/category/:categoryId" element={<ProtectedRoute><Category/></ProtectedRoute>}/>
           <Route exact path="/products/:productId" element={<ProtectedRoute><Product/></ProtectedRoute>}/>
           <Route exact path="/admin/add-product" element={<ProtectedAdminRoute><AddProduct/></ProtectedAdminRoute>}/>

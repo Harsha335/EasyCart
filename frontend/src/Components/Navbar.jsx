@@ -36,11 +36,11 @@ const Navbar = () => {
         </span>
       </div>
       {/* <div className='flex-1 '>Search bar</div> */}
-      <div className="w-3/5 flex items-start  flex-col md:items-center md:justify-end md:flex-row ">
+      <div className="w-2/5 flex items-start  flex-col md:items-center md:flex-row md:justify-around ">
         {/* <div> */}
           <Link
           to="/search"
-          className="mx-10 cursor-pointer group hover:text-orange-600 transition duration-300 md:py-5"
+          className="cursor-pointer group hover:text-orange-600 transition duration-300 md:py-5"
           >
           <SearchIcon/>
           <span className="block max-w-0 group-hover:max-w-full transition-all duration-500 h-0.5 bg-orange-500"></span>
@@ -48,41 +48,41 @@ const Navbar = () => {
         {/* </div> */}
         <Link
           to="/"
-          className="mx-10 cursor-pointer group hover:text-orange-600 transition duration-300 md:py-5"
+          className="cursor-pointer group hover:text-orange-600 transition duration-300 md:py-5"
         >
           Home
           <span className="block max-w-0 group-hover:max-w-full transition-all duration-500 h-0.5 bg-orange-500"></span>
         </Link>
         <Link
           to="/products"
-          className="mx-10 cursor-pointer group hover:text-orange-600 transition duration-300 md:py-5"
+          className="cursor-pointer group hover:text-orange-600 transition duration-300 md:py-5"
         >
           All products
           <span className="block max-w-0 group-hover:max-w-full transition-all duration-500 h-0.5 bg-orange-500"></span>
         </Link>
         {userDetails && (
-          <Link className="mx-10 cursor-pointer group hover:text-orange-600 transition duration-300 md:py-5" to ="/wishList">
+          <Link className="cursor-pointer group hover:text-orange-600 transition duration-300 md:py-5" to ="/wishList">
             Wish List
             <span className="block max-w-0 group-hover:max-w-full transition-all duration-500 h-0.5 bg-orange-500"></span>
           </Link>
         )}
         {userDetails && (
-          <span className="mx-10 cursor-pointer group hover:text-orange-600 transition duration-300 md:py-5">
+          <Link className="cursor-pointer group hover:text-orange-600 transition duration-300 md:py-5" to="/cart">
             Cart 
             <Badge color="primary" badgeContent={cartQuantity} max={10} >
                   <ShoppingCartTwoToneIcon />
             </Badge>
             <span className="block max-w-0 group-hover:max-w-full transition-all duration-500 h-0.5 bg-orange-500"></span>
-          </span>
+          </Link>
         )}
         {userDetails.isAdmin && (
-          <span className="mx-10 cursor-pointer group hover:text-orange-600 transition duration-300 md:py-5">
+          <span className="cursor-pointer group hover:text-orange-600 transition duration-300 md:py-5">
             Admin
             <span className="block max-w-0 group-hover:max-w-full transition-all duration-500 h-0.5 bg-orange-500"></span>
           </span>
         )}
         {userDetails && (
-          <span className="mx-10  group relative ">
+          <span className="group relative ">
             <span className="cursor-pointer group hover:text-orange-600 transition duration-300 md:py-5">
               <AccountCircleIcon />
               <span className="block max-w-0 group-hover:max-w-full transition-all duration-500 h-0.5 bg-orange-500"></span>
@@ -97,7 +97,7 @@ const Navbar = () => {
         )}
         {!userDetails && (
           <Link
-            className="mx-10 cursor-pointer group hover:text-orange-600 transition duration-300 md:py-5"
+            className="cursor-pointer group hover:text-orange-600 transition duration-300 md:py-5"
             to="/login"
           >
             Login
