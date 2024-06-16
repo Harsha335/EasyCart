@@ -10,8 +10,9 @@ const verifyToken = (req,res,next)=>{
         jwt.verify(token, process.env.JWT_SECRET, (err, user)=>{
             if(err || user === undefined)
             {
-                console.log(err);
-                return res.status(403).send({message: "Token is invalid"});
+                console.log("verifyToken ERROR ",err);
+                console.log("redirect to : ",`${process.env.CLIENT_URL}/login`);
+                return res.status(401).send({message: "Token is invalid"});
             }
             req.user = user;
             console.log("-----------------------------------------");

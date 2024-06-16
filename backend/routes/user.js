@@ -50,13 +50,45 @@ router.get("/find/:id", verifyTokenAndAuthorization,async (req, res)=>{
 });
 
 //GET, find all users - Admin
-router.get("/", verifyTokenAndAdmin, async (req, res)=>{
+router.get("/all", verifyTokenAndAdmin, async (req, res)=>{
     try{        
         const users = await User.find();
         // const {password, ...others} = user._doc;
         res.status(200).json({"success":true, users});
     }catch(err){
         res.status(500).json({"success":false, "message": err});
+    }
+});
+
+//GET, ADDRESS
+router.get("/address", verifyTokenAndAuthorization, async (req, res) => {
+    try{
+        const userId = req.user.id;
+        const user = await User.findById(userId);
+        if(!user){
+            return res.status(400).json({success: false, message: "user not found"});
+        }
+        // console.log(user);
+        res.status(200).json({address: user?.address});
+    }catch(err){
+        res.status(500).json({success: false, "message": err});
+    }
+});
+// SAVE USER ADDRESS
+router.post("/address", verifyTokenAndAuthorization, async (req, res) => {
+    try{
+        const address = req.body;
+        const userId = req.user.id;
+        const user = await User.findById(userId);
+        if(!user){
+            return res.status(400).json({success: false, message: "user not found"});
+        }
+        user.address = address;
+        await user.save();
+        res.status(200).json({address: user.address});
+    }catch(err){
+        console.log(err);
+        res.status(500).json({success: false, "message": err});
     }
 });
 

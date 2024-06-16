@@ -133,9 +133,9 @@ const Register = () => {
               </div>
             </div>
             <span className="flex flex-row justify-end">
-              <div className="mt-10  text-white rounded-full px-4 py-2 bg-blue-800 p-2 cursor-pointer text-center hover:shadow-md hover:shadow-indigo-500/50" onClick={handleRegister}>
+              <button className="mt-10  text-white rounded-full px-4 py-2 bg-blue-800 p-2 cursor-pointer text-center hover:shadow-md hover:shadow-indigo-500/50" onClick={handleRegister}>
                 Register
-              </div>
+              </button>
             </span>
           </span>
           <div>

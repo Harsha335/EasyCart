@@ -59,15 +59,11 @@ const Cart = () => {
         setGrandTotal(currPrice - currDiscount + currShippingPice);
     },[productDetails]);
 
-    const placeOrder = () => {
-        alert(grandTotal);  // include payment method
-    }
-
     if(cartProducts.length !== 0 && productDetails === 0){
         return (<div>Loading...</div>);
     }
     return (
-            <>
+    <>
       <Navbar/>
       <div>
         <div className="text-3xl font-semibold font-PlayfairDisplay flex items-center justify-center shadow-lg p-3">
@@ -111,7 +107,7 @@ const Cart = () => {
                         <span>₹ {numberFormatter(grandTotal)}</span>
                     </span>
                     <div className='flex items-center justify-center'>
-                        <div className='bg-orange-600 w-full text-white flex items-center justify-center p-2 cursor-pointer' onClick={() => placeOrder()}>Place order</div>
+                        <Link to='/cart/stripe-payment' state = {{products : productDetails, amount : grandTotal}} className='bg-orange-600 w-full text-white flex items-center justify-center p-2 cursor-pointer'>Place order</Link>
                     </div>
                 </span>
             </div>

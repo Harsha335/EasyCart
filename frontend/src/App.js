@@ -15,6 +15,9 @@ import ProtectedAdminRoute from "./ProtectedAdminRoute";
 import WishList from "./pages/WishList";
 import Search from "./pages/Search";
 import Cart from "./pages/Cart";
+import StripePayment from "./pages/StripePayment";
+import TransactionSuccess from "./pages/TransactionSuccess";
+import Orders from "./pages/Orders";
 
 function App() {
   return (
@@ -28,6 +31,9 @@ function App() {
           <Route exact path="/wishList" element={<ProtectedRoute><WishList/></ProtectedRoute>}/>
           <Route exact path="/search" element={<ProtectedRoute><Search/></ProtectedRoute>}/>
           <Route exact path="/cart" element={<ProtectedRoute><Cart/></ProtectedRoute>}/>
+          <Route exact path="/cart/stripe-payment" element={<ProtectedRoute><StripePayment/></ProtectedRoute>}/>
+          <Route exact path="/transaction-success" element={<ProtectedRoute><TransactionSuccess/></ProtectedRoute>}/>
+          <Route exact path="/orders" element={<ProtectedRoute><Orders/></ProtectedRoute>}/>
           <Route exact path="/category/:categoryId" element={<ProtectedRoute><Category/></ProtectedRoute>}/>
           <Route exact path="/products/:productId" element={<ProtectedRoute><Product/></ProtectedRoute>}/>
           <Route exact path="/admin/add-product" element={<ProtectedAdminRoute><AddProduct/></ProtectedAdminRoute>}/>

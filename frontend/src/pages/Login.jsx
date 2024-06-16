@@ -113,9 +113,9 @@ const Login = () => {
               </div>
             </div>
             <span className="flex flex-row justify-end">
-              <div className=" mt-10  text-white rounded-full bg-blue-800 px-4 py-2 cursor-pointer text-center hover:shadow-md hover:shadow-indigo-500/50" onClick={handleLogin}>
+              <button className=" mt-10  text-white rounded-full bg-blue-800 px-4 py-2 cursor-pointer text-center hover:shadow-md hover:shadow-indigo-500/50" onClick={handleLogin}>
                 Login
-              </div>
+              </button>
             </span>
           </span>
           {/* <div><FcGoogle size = '1.4em'/> </div> */}
