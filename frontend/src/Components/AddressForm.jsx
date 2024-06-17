@@ -36,7 +36,7 @@ const AddressForm = ({address, setAddress}) => {
     }
   }
   return (
-    <div className="flex-1 flex flex-col p-5 gap-4 shadow-2xl">
+    <div className="w-full lg:flex-1 flex flex-col p-5 gap-4 shadow-2xl">
       <span className=" flex flex-row justify-between items-center">
         <span className="text-3xl font-semibold">Shipping Address</span>
         <button className="bg-blue-500 text-white rounded-md px-2 py-1" onClick={() => getAddress()}>

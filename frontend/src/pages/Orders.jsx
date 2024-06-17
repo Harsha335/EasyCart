@@ -47,12 +47,12 @@ const Orders = () => {
         `}
       </style>
       <Navbar/>
-      <div className='min-h-screen'>
+      <div className='min-h-screen overflow-auto'>
         <div className='font-bold text-3xl p-4'>Your Orders</div>
         <div>
           {
             orders?.length === 0 ?
-            <div className='w-full h-full flex items-center justify-center'><img src={no_orders_img} width={"40%"} alt='no orders placed'/></div>
+            <div className='w-full h-full flex items-center justify-center'><img src={no_orders_img} className='w-[90%] md:w-[60%] lg:w-[40%]' alt='no orders placed'/></div>
             :
             <div className='relative'>
             <table className='w-full'>

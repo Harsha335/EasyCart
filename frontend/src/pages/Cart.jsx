@@ -62,13 +62,13 @@ const Cart = () => {
     return (
     <>
       <Navbar/>
-      <div className='min-h-screen'>
-        <div className="text-3xl font-semibold font-PlayfairDisplay flex items-center justify-center shadow-lg p-3">
+      <div className='min-h-screen overflow-auto'>
+        <div className="text-3xl font-semibold font-PlayfairDisplay flex items-center justify-center shadow-lg p-3 mb-2">
           <span>Cart <ShoppingCartIcon sx={{fontSize:"2rem"}}/></span>
         </div>
         {
             productDetails.length !== 0 ? 
-            <div className='flex flex-row px-16 py-4 gap-16 '>
+            <div className='flex flex-col lg:flex-row items-center lg:items-start justify-center md:px-16 md:py-4 gap-16'>
                 {/* product list */}
                 <div className='flex flex-col flex-1 gap-5 '>
                     {
@@ -78,7 +78,7 @@ const Cart = () => {
                     }
                 </div>
                 {/* order summary */}
-                <span className='w-96 h-96 rounded-lg shadow-lg flex flex-col p-5 font-ubuntu text-xl gap-4'>
+                <div className='whitespace-nowrap w-96 h-96 rounded-lg shadow-lg flex flex-col p-5 font-ubuntu text-xl gap-4'>
                     <span>
                         <span className='font-ubuntu text-3xl flex items-center justify-center'>ORDER SUMMARY</span>
                         <div style={{ borderTop: "2px solid #000000 ", marginLeft: 20, marginRight: 20 }}></div>
@@ -106,7 +106,7 @@ const Cart = () => {
                     <div className='flex items-center justify-center'>
                         <Link to='/cart/stripe-payment' state = {{products : productDetails, amount : grandTotal}} className='bg-orange-600 w-full text-white flex items-center justify-center p-2 cursor-pointer'>Place order</Link>
                     </div>
-                </span>
+                </div>
             </div>
             :
             <div className='flex items-center justify-center'>

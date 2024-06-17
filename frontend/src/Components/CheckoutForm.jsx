@@ -76,7 +76,7 @@ const CheckoutForm = ({ address, products}) => {
     };
 
   return (
-    <div className="flex-1">
+    <div className="w-full lg:flex-1 ">
         <form onSubmit={handleSubmit}>
             <div className="card w-100 bg-base-100 bg-slate-50 shadow-2xl rounded-lg">
                 <div className="card-body p-6">

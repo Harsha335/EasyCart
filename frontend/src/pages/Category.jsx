@@ -62,7 +62,7 @@ const Category = () => {
         <div className="text-3xl font-semibold font-PlayfairDisplay pb-2 pl-2 flex items-center justify-center">
           <span>{categoryName}</span>
         </div>
-        <div className="bg-neutral-100 my-[15px] p-2 rounded-[10px] shadow-inner  grid grid-cols-5 overflow-auto">
+        <div className="bg-neutral-100 my-[15px] p-2 rounded-[10px] shadow-inner  flex flex-row flex-wrap gap-8 items-center justify-around">
           {products?.map((product) => {
             return <Card product={product} />;
           })}

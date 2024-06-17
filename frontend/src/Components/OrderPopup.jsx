@@ -8,13 +8,13 @@ const OrderPopup = ({order,setOrderPopupItem}) => {
   }
   return (
     <div className='fixed top-0 left-0 w-full h-full bg-[rgba(0,0,0,0.2)] flex items-center justify-center'>
-        <div className='w-[35rem] max-h-[75%] overflow-auto bg-white relative rounded-lg p-3'>
+        <div className='max-h-[75%] overflow-auto bg-white relative rounded-lg p-3 m-3'>
             <span className='absolute top-2 right-2 cursor-pointer hover:bg-slate-200 rounded-full p-1' onClick={()=>closePopup()}><CloseIcon/></span>
             <div>
-                <div className='font-semibold text-xl px-4 py-2 flex items-center justify-center'>Order Summary</div>
+                <div className='font-semibold text-xl px-4 py-2 flex items-center justify-center whitespace-nowrap'>Order Summary</div>
                 <div className='bg-gradient-to-r from-transparent via-gray-500 to-transparent h-[1px] w-full'></div>
             </div>
-            <div className='flex flex-col gap-3 p-2'>
+            <div className='flex flex-col gap-3 p-2 whitespace-nowrap'>
                 <div className='flex flex-col'>
                     <span className='font-semibold'>Order ID</span>
                     <span className='ml-4'>{order._id}</span>

@@ -52,7 +52,7 @@ const StripePayment = () => {
     return (
         <>
             <Navbar/>
-            <div className='flex flex-col md:flex-row gap-16 min-h-screen items-start'>
+            <div className='flex flex-col p-4 lg:p-0 lg:flex-row gap-16 min-h-screen items-start'>
                 <FinalCartDisplay products={products} amount={amount}/>
                 <AddressForm address={address} setAddress={setAddress}/>
                 {stripe && clientSecret && productDetails &&
