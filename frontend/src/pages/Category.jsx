@@ -58,7 +58,7 @@ const Category = () => {
   return (
     <>
       <Navbar />
-      <div className="m-4" key={categoryId}>
+      <div className="m-4 min-h-screen" key={categoryId}>
         <div className="text-3xl font-semibold font-PlayfairDisplay pb-2 pl-2 flex items-center justify-center">
           <span>{categoryName}</span>
         </div>

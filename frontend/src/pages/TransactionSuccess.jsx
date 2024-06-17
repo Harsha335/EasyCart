@@ -11,7 +11,7 @@ const TransactionSuccess = () => {
     <>
         <Confetti width={width-1} height={height-1} numberOfPieces={200}/>
         <Navbar/>
-        <div className={`w-full h-full flex flex-col items-center justify-center gap-3`}>
+        <div className={`w-full min-h-screen flex flex-col items-center justify-center gap-3`}>
             <span className='text-4xl font-semibold'>Transaction is Successful</span>
             <Link to="/orders" className='border-solid border-2 border-black p-3 bg-orange-600 text-white cursor-pointer hover:text-[1.09em] transition-all duration-200 ease-out '>View all Orders</Link> 
         </div>

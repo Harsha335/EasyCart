@@ -67,6 +67,12 @@ const Navbar = () => {
           </Link>
         )}
         {userDetails && (
+          <Link className="cursor-pointer group hover:text-orange-600 transition duration-300 md:py-5" to ="/orders">
+            Orders
+            <span className="block max-w-0 group-hover:max-w-full transition-all duration-500 h-0.5 bg-orange-500"></span>
+          </Link>
+        )}
+        {userDetails && (
           <Link className="cursor-pointer group hover:text-orange-600 transition duration-300 md:py-5" to="/cart">
             Cart 
             <Badge color="primary" badgeContent={cartQuantity} max={10} >

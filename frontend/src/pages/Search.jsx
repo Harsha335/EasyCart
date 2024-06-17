@@ -81,9 +81,10 @@ const Search = () => {
         <div className='flex'>
             {/* FEATURES */}
             <div className='flex-none w-80 flex flex-col gap-5 p-4 shadow-md'>
-                <span className='flex items-center justify-center font-ubuntu text-xl font-medium'>
+                <span className='flex items-center justify-center font-ubuntu text-xl font-semibold'>
                     FILTERS
                 </span>
+                    <div className='bg-gradient-to-r from-transparent via-gray-500 to-transparent h-[2px] w-full'></div>
                 <span className='flex flex-col gap-3'>
                     <span>Category</span>
                     <span>

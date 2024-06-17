@@ -1,18 +1,16 @@
 import React from 'react'
+import { numberFormatter } from '../assets/formatter';
 
 const FinalCartDisplay = ({products, amount}) => {
 
-  const numberFormatter = (number) => {
-    if(!number)
-      return 0;
-    const formatter = new Intl.NumberFormat('en-IN');
-    return formatter.format(number);
-  }
-
   return (
-    <div className='flex-1 flex flex-col shadow-2xl p-5'>
+    <div className='flex-1 flex flex-col shadow-2xl p-5 max-h-min'>
+      <div className='font-semibold text-3xl flex items-center justify-center flex-col'>
+        Order details
+        <div className='bg-gradient-to-r from-transparent via-gray-500 to-transparent h-[2px] w-full'></div>
+      </div>
       <div className='flex flex-col'>
-        <span className='font-semibold text-2xl'>Pay</span>
+        <span className='font-semibold text-xl'>Pay</span>
         <span className='text-3xl'>₹ {numberFormatter(amount)}</span>
       </div>
       <div className='flex flex-col gap-2'>

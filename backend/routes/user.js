@@ -1,6 +1,7 @@
 const express = require("express");
 const { verifyTokenAndAuthorization, verifyTokenAndAdmin } = require("./verifyToken");
 const User = require("../models/User");
+const Purchase = require("../models/Purchase");
 const router = express.Router();
 
 //UPDATE user with id
@@ -88,6 +89,19 @@ router.post("/address", verifyTokenAndAuthorization, async (req, res) => {
         res.status(200).json({address: user.address});
     }catch(err){
         console.log(err);
+        res.status(500).json({success: false, "message": err});
+    }
+});
+
+// GET ORDERS PLACED BY USER
+router.get("/orders", verifyTokenAndAuthorization, async (req, res) => {
+    try{
+        const userId = req.user.id;
+        const orders = await Purchase.find({userId});
+        console.log("orders : ", orders);
+        res.status(200).json({success: true, orders});
+    }catch(err){
+        console.log("Error @ /orders : ",err);
         res.status(500).json({success: false, "message": err});
     }
 });

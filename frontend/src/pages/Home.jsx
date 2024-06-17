@@ -68,7 +68,7 @@ const Home = () => {
       {categories &&
         categories.map((category) => {
           return (
-              <div className='m-4' key={category._id}>
+              <div className='m-4 min-h-screen' key={category._id}>
                 <div className='text-3xl font-semibold font-PlayfairDisplay border-l-[6px] border-orange-600 pb-2 pl-2'>
                   <Link to={`/category/${category._id}`}>{category.title}</Link>
                 </div>  {/*Electronics*/}

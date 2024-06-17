@@ -15,6 +15,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { addToCart, removeFromCart } from "../redux/reducer/CartSlice";
 import {axiosInstance} from "../Api_calls/API";
 import { addLikedProduct, removeLikedProduct } from "../redux/reducer/UserSlice";
+import { getDate, numberFormatter } from "../assets/formatter";
 
 const Product = () => {
   const { productId } = useParams();
@@ -56,10 +57,6 @@ const Product = () => {
     getComments();
   }, [productId]);
 
-  const numberFormatter = (number) => {
-    const formatter = new Intl.NumberFormat('en-IN');
-    return formatter.format(number);
-  }
 
   const liked = useSelector(store => store.userReducer.userDetails.likedProductIds).includes(productId);
   const postLiked = async () => {
@@ -108,16 +105,6 @@ const Product = () => {
     console.log("removed from cart ");
   }
 
-  const getDate = (date) => {
-    // alert(new Date());
-    if (!(date instanceof Date)) {
-      throw new Error("Invalid date");
-    }
-    const currentDay = String(date.getDate()).padStart(2, "0");
-    const currentMonth = String(date.getMonth() + 1).padStart(2, "0");
-    const currentYear = date.getFullYear();
-    return `${currentDay}-${currentMonth}-${currentYear}`;
-  };
 
   
   const [userEmail, setUserEmail] = useState("");
@@ -158,7 +145,7 @@ const Product = () => {
   return (
     <>
       <Navbar />
-      <div className=" w-[100%] flex flex-col md:flex-row">
+      <div className=" w-[100%] min-h-screen flex flex-col md:flex-row">
         {/* picture */}
         <div className="relative h-[75vh] flex-1 flex flex-col">
           {/* LIKE */}

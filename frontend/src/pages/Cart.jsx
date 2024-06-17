@@ -7,12 +7,9 @@ import { axiosInstance } from '../Api_calls/API';
 import CartCard from '../Components/CartCard';
 import noItemImg from '../assets/images/no-item-in-cart.gif';
 import { Link } from 'react-router-dom';
+import { numberFormatter } from '../assets/formatter';
 
 const Cart = () => {
-    const numberFormatter = (number) => {
-        const formatter = new Intl.NumberFormat('en-IN');
-        return formatter.format(number);
-    }
 
     const cartProducts = useSelector(store => store.cartReducer.cartItems);
     console.log("cartProducts : ",cartProducts);
@@ -65,7 +62,7 @@ const Cart = () => {
     return (
     <>
       <Navbar/>
-      <div>
+      <div className='min-h-screen'>
         <div className="text-3xl font-semibold font-PlayfairDisplay flex items-center justify-center shadow-lg p-3">
           <span>Cart <ShoppingCartIcon sx={{fontSize:"2rem"}}/></span>
         </div>
