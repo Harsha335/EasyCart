@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from "react";
 import ShoppingCartTwoToneIcon from "@mui/icons-material/ShoppingCartTwoTone";
 import MenuTwoToneIcon from "@mui/icons-material/MenuTwoTone";
+import CloseIcon from '@mui/icons-material/Close';
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
-import { Link } from "react-router-dom";
+import { NavLink, Link } from "react-router-dom";
 import { useUserAuth } from "../context/UserAuthContext";
 import { useSelector } from "react-redux";
 import { Badge, IconButton } from "@mui/material";
@@ -11,8 +12,12 @@ import SearchIcon from '@mui/icons-material/Search';
 
 const Navbar = () => {
   // const navigate = useNavigate();
+  const [menuOpen, setMenuOpen] = useState(false);
 
   const { logOut } = useUserAuth();
+  const menuAction = () => {
+    setMenuOpen(prev => !prev);
+  }
 
   const userDetails = useSelector((store) => store.userReducer.userDetails);
   const cartQuantity = useSelector(store => store.cartReducer.quantity);
@@ -26,89 +31,107 @@ const Navbar = () => {
   };
 
   return (
-    <div className="bg-[#050458] h-40 md:h-[100%] text-white flex flex-col md:flex-row sticky top-0 z-20">
-      <div className="flex-1  font-ubuntu flex items-center justify-between text-[2.2rem] px-[1em] md:px-[5em] ">
+    <div className="bg-[#050458] text-white flex flex-col lg:flex-row sticky top-0 z-20">
+      <style>
+        {`
+          .active{
+            color: rgb(249 115 22);
+          }
+          a:hover{
+            color: rgb(249 115 22);
+          }
+        `}
+      </style>
+
+      <div className="relative flex-1  font-ubuntu flex items-center text-[2.2rem] px-[1em] lg:px-[5em] ">
         <span>
           Easy<span className="text-orange-600">Cart</span>
         </span>
-        <span className="cursor-pointer block md:hidden mx-5">
-          <MenuTwoToneIcon />
+        <span className="absolute right-3 cursor-pointer block lg:hidden mx-5" onClick={() => menuAction()}>
+          {
+            menuOpen ? <CloseIcon/> : <MenuTwoToneIcon />
+          }
         </span>
       </div>
+
       {/* <div className='flex-1 '>Search bar</div> */}
-      <div className="w-2/5 flex items-start  flex-col md:items-center md:flex-row md:justify-around ">
+      <div className={`${menuOpen ? "flex" : "hidden"} flex-col gap-5 bg-[#050465] lg:bg-[#050458] lg:flex lg:w-2/5 py-5 lg:items-center lg:flex-row lg:justify-around`}>
         {/* <div> */}
-          <Link
+        <NavLink
           to="/search"
-          className="cursor-pointer group hover:text-orange-600 transition duration-300 md:py-5"
+          className="cursor-pointer group transition duration-300 w-full flex items-center justify-center lg:w-auto"
           >
-          <SearchIcon/>
+            <span className="mr-2 lg:hidden">Search </span><SearchIcon/>
           <span className="block max-w-0 group-hover:max-w-full transition-all duration-500 h-0.5 bg-orange-500"></span>
-        </Link>
+        </NavLink>
         {/* </div> */}
-        <Link
+        <NavLink
           to="/"
-          className="cursor-pointer group hover:text-orange-600 transition duration-300 md:py-5"
+          className="cursor-pointer group transition duration-300  w-full flex items-center justify-center lg:w-auto"
         >
           Home
           <span className="block max-w-0 group-hover:max-w-full transition-all duration-500 h-0.5 bg-orange-500"></span>
-        </Link>
-        <Link
+        </NavLink>
+        <NavLink
           to="/products"
-          className="cursor-pointer group hover:text-orange-600 transition duration-300 md:py-5"
+          className="cursor-pointer group transition duration-300 w-full flex items-center justify-center lg:w-auto"
         >
           All products
           <span className="block max-w-0 group-hover:max-w-full transition-all duration-500 h-0.5 bg-orange-500"></span>
-        </Link>
+        </NavLink>
         {userDetails && (
-          <Link className="cursor-pointer group hover:text-orange-600 transition duration-300 md:py-5" to ="/wishList">
+          <NavLink className="cursor-pointer group transition duration-300  w-full flex items-center justify-center lg:w-auto" to ="/wishList">
             Wish List
             <span className="block max-w-0 group-hover:max-w-full transition-all duration-500 h-0.5 bg-orange-500"></span>
-          </Link>
+          </NavLink>
         )}
         {userDetails && (
-          <Link className="cursor-pointer group hover:text-orange-600 transition duration-300 md:py-5" to ="/orders">
+          <NavLink className="cursor-pointer group transition duration-300  w-full flex items-center justify-center lg:w-auto" to ="/orders">
             Orders
             <span className="block max-w-0 group-hover:max-w-full transition-all duration-500 h-0.5 bg-orange-500"></span>
-          </Link>
+          </NavLink>
         )}
         {userDetails && (
-          <Link className="cursor-pointer group hover:text-orange-600 transition duration-300 md:py-5" to="/cart">
+          <NavLink className="cursor-pointer group transition duration-300  w-full flex items-center justify-center lg:w-auto" to="/cart">
             Cart 
             <Badge color="primary" badgeContent={cartQuantity} max={10} >
                   <ShoppingCartTwoToneIcon />
             </Badge>
             <span className="block max-w-0 group-hover:max-w-full transition-all duration-500 h-0.5 bg-orange-500"></span>
-          </Link>
+          </NavLink>
         )}
         {userDetails.isAdmin && (
-          <span className="cursor-pointer group hover:text-orange-600 transition duration-300 md:py-5">
+          <NavLink className="cursor-pointer group transition duration-300  w-full flex items-center justify-center lg:w-auto" to="/admin">
             Admin
             <span className="block max-w-0 group-hover:max-w-full transition-all duration-500 h-0.5 bg-orange-500"></span>
-          </span>
+          </NavLink>
         )}
+
+        {/*   LINE DIVIDER   */}
+        <div className='bg-gradient-to-r from-transparent via-gray-500 to-transparent h-[2px] w-full lg:hidden'></div>
+
         {userDetails && (
           <span className="group relative ">
-            <span className="cursor-pointer group hover:text-orange-600 transition duration-300 md:py-5">
+            <span className="hidden cursor-pointer group transition duration-300 w-full lg:flex items-center justify-center lg:w-auto">
               <AccountCircleIcon />
               <span className="block max-w-0 group-hover:max-w-full transition-all duration-500 h-0.5 bg-orange-500"></span>
             </span>
-            <span
-              className="absolute bg-[#050458] -bottom-14 -left-5 p-2 pt-5 hidden group-hover:block cursor-pointer"
-              onClick={handleLogOut}
+            <div
+              className="flex items-center justify-around lg:absolute lg:bg-[#050458] lg:p-2 lg:w-24 lg:right-[-1rem] lg:hidden lg:group-hover:block cursor-pointer "
             >
-              signout
-            </span>
+              <NavLink to="/profile">Profile</NavLink>
+              <div onClick={handleLogOut} className="hover:text-orange-500">Sign out</div>
+            </div>
           </span>
         )}
         {!userDetails && (
-          <Link
-            className="cursor-pointer group hover:text-orange-600 transition duration-300 md:py-5"
+          <NavLink
+            className="cursor-pointer group transition duration-300 w-full flex items-center justify-center lg:w-auto"
             to="/login"
           >
             Login
             <span className="block max-w-0 group-hover:max-w-full transition-all duration-500 h-0.5 bg-orange-500"></span>
-          </Link>
+          </NavLink>
         )}
       </div>
     </div>

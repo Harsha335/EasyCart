@@ -84,7 +84,8 @@ const Search = () => {
                 <span className='flex items-center justify-center font-ubuntu text-xl font-semibold'>
                     FILTERS
                 </span>
-                    <div className='bg-gradient-to-r from-transparent via-gray-500 to-transparent h-[2px] w-full'></div>
+                {/* LINE DIVIDER */}
+                <div className='bg-gradient-to-r from-transparent via-gray-500 to-transparent h-[2px] w-full'></div>
                 <span className='flex flex-col gap-3'>
                     <span>Category</span>
                     <span>

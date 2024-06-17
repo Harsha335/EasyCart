@@ -36,8 +36,10 @@ const Card = ({product}) => {
   }
 
   return (
-    <div className="w-56 rounded-sm cursor-pointer flex items-center justify-center flex-col" onMouseEnter={()=>{setHoverCard(true)}} onMouseLeave={()=>{setHoverCard(false)}} >
-      <div className="h-64 w-full relative flex items-center justify-center">
+    <div className="w-[250px] rounded-sm cursor-pointer flex items-center justify-center flex-col" 
+      onMouseEnter={()=>{setHoverCard(true)}} onMouseLeave={()=>{setHoverCard(false)}} 
+    >
+      <div className="h-[264px] w-[250px] relative flex items-center justify-center">
           <img
             src={product?.image_url[0]}
             className="h-full  rounded-[10px] relative object-contain"
@@ -63,7 +65,7 @@ const Card = ({product}) => {
           }
 
       </div>
-      <div className=" text-[1rem] line-clamp-2">{product?.title}</div>
+      <div className="text-[1rem] line-clamp-2">{product?.title}</div>
     </div>
   );
 };

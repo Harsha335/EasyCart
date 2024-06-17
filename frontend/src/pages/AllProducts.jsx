@@ -67,14 +67,14 @@ const AllProducts = () => {
           return (
               <div className='m-4' key={category._id}>
                 <div className='text-3xl font-semibold font-PlayfairDisplay border-l-[6px] border-orange-600 pb-2 pl-2'>{category.title}</div>  {/*Electronics*/}
-                <div className='bg-neutral-100 my-[15px] p-2 rounded-[10px] shadow-inner  grid grid-cols-5 overflow-auto'>{/* grid grid-cols-5 gap-4 */}
+                <div className='bg-neutral-100 my-[15px] p-2 rounded-[10px] shadow-inner flex flex-row gap-8 items-center justify-around overflow-auto'>{/* grid grid-cols-5 gap-4 */}
                   {
                     getIndexProduct(category._id)?.map((product) => {
                           return (<Card product={product}/>);
                     })
                   } 
                   <div className='h-full flex items-center justify-center '>
-                    <span className='w-56 h-[90%] bg-slate-300 rounded-2xl flex items-center justify-center '>
+                    <span className='w-[250px] h-[250px] bg-slate-300 rounded-2xl flex items-center justify-center '>
                       <span className='p-2 border-2 border-black bg-orange-500 text-white cursor-pointer hover:p-3'><Link to={`/category/${category._id}`}>VIEW MORE</Link></span>
                     </span>    
                   </div>

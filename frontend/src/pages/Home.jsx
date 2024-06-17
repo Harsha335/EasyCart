@@ -68,11 +68,11 @@ const Home = () => {
       {categories &&
         categories.map((category) => {
           return (
-              <div className='m-4 min-h-screen' key={category._id}>
+              <div className='m-4' key={category._id}>
                 <div className='text-3xl font-semibold font-PlayfairDisplay border-l-[6px] border-orange-600 pb-2 pl-2'>
                   <Link to={`/category/${category._id}`}>{category.title}</Link>
                 </div>  {/*Electronics*/}
-                <div className='bg-neutral-100 my-[15px] p-2 rounded-[10px] shadow-inner  grid grid-cols-5 overflow-auto'>{/* grid grid-cols-5 gap-4 */}
+                <div className='bg-neutral-100 my-[1rem] p-2 rounded-[10px] shadow-inner flex flex-row gap-8 items-center justify-around overflow-auto'>{/* grid grid-cols-5 gap-4 */}
                   {
                     getIndexProduct(category._id)?.map((product) => {
                           return (<Card product={product}/>);
