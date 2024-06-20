@@ -46,6 +46,7 @@ router.get("/find/:id", verifyTokenAndAuthorization,async (req, res)=>{
         const {password, ...data} = user._doc;
         res.status(200).json({"success":true, data});
     }catch(err){
+        console.log("Error @ find user by Id: ", err);
         res.status(500).json({"success":false, "message": err});
     }
 });
@@ -102,6 +103,26 @@ router.get("/orders", verifyTokenAndAuthorization, async (req, res) => {
         res.status(200).json({success: true, orders});
     }catch(err){
         console.log("Error @ /orders : ",err);
+        res.status(500).json({success: false, "message": err});
+    }
+});
+
+//  ADMIN DASHBOARD
+router.get("/userCount", verifyTokenAndAdmin, async (req, res) => {
+    try{
+        const date = new Date();
+        // past 30 days
+        date.setDate(date.getDate() - 30);
+        const allUsersCount = (await User.find()).length;
+        const recentUsersCount = (await User.find({
+            createdAt: {
+                $gte: date
+            }
+        })).length;
+        const recentUsersPercentage = (recentUsersCount/allUsersCount)*100;
+        res.status(200).json({success: true, usersCount: allUsersCount, userDeltaPer: recentUsersPercentage});
+    }catch(err){
+        console.log("Error @ /userCount : ",err);
         res.status(500).json({success: false, "message": err});
     }
 });

@@ -3,6 +3,7 @@ const userRouter = require("./routes/user");
 const authRouter = require("./routes/auth");
 const productRouter = require("./routes/product");
 const paymentRouter = require("./routes/payment");
+const adminRouter = require("./routes/admin");
 const { mongoose } = require("mongoose");
 const bodyParser = require('body-parser');
 const cors = require('cors');
@@ -42,6 +43,7 @@ app.use("/api/auth", authRouter);
 app.use("/api/users",userRouter);
 app.use("/api/product", productRouter);
 app.use("/api/payment", paymentRouter);
+app.use("/api/admin", adminRouter);
 
 app.listen(PORT , ()=>{
     console.log("Backend running @ localhost:5000 ...")

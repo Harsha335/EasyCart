@@ -41,7 +41,7 @@ export function UserAuthContextProvider({children}){
             dispatch(addUserDetails({email, isAdmin, likedProductIds}));
         }catch(err){
             console.log("ERROR @ UserAuthContext/getUserDetails : ",err);
-            if(err.response.status === 401) // TOKEN EXPIRED
+            if(err.response?.status === 401) // TOKEN EXPIRED
             {
                 console.log(`${process.env.REACT_APP_CLIENT_URL}/login`);
                 window.location.href = `/login`;

@@ -111,21 +111,6 @@ router.get("/category/:categoryId", verifyTokenAndAuthorization, async (req, res
     }
 });
 
-// GET product details by prodId
-router.get("/:productId", verifyTokenAndAuthorization, async (req, res) => {
-    try{
-        const {productId} = req.params;
-        if(!productId){
-            return res.status(200).json({message: "Failed to fetch product id"});
-        }
-        // console.log("product-Id : ", productId);
-        const product = await Product.findById(productId);
-        res.status(200).json({product});
-    }catch(err){
-        console.log("get products by id error : ", err);
-        res.status(500).json(err);
-    }
-});
 
 router.post("/comment", verifyTokenAndAuthorization, async (req, res) => {
     try{
@@ -206,7 +191,7 @@ router.get("/search/:searchText", async (req, res) => {
         if (!rating || !minPrice || !maxPrice) {
             return res.status(400).json({ success: false, message: "Rating, minPrice, and maxPrice are required." });
         }
-
+        
         // Create an array of query conditions
         const queryConditions = [
             { tags: { $in: searchText.split(" ") } },
@@ -214,7 +199,7 @@ router.get("/search/:searchText", async (req, res) => {
             { price: { $gte: Number(minPrice) } },
             { price: { $lte: Number(maxPrice) } }
         ];
-
+        
         // Add categoryId condition if provided, else include all categories
         if (categoryId !== 'null') {
             queryConditions.push({ categoryId });
@@ -237,4 +222,41 @@ router.get("/search/:searchText", async (req, res) => {
     }
 });
 
+//  FOR ADMIN DASHBOARD
+router.get("/productsCount", verifyTokenAndAdmin, async (req, res) => {
+    try{
+        const date = new Date();
+        // past 30 days
+        date.setDate(date.getDate() - 30);
+        console.log(date);
+        const allProductsCount = (await Product.find()).length;
+        const recentProductsCount = (await Product.find({
+            createdAt: {
+                $gte: date
+            }
+        })).length;
+        console.log(date, allProductsCount, recentProductsCount);
+        const recentProductsPercentage = (recentProductsCount/allProductsCount)*100;
+        res.status(200).json({success: true, productsCount: allProductsCount, productsDeltaPer: recentProductsPercentage});
+    }catch(err){
+        console.log("Error @ /productsCount : ",err);
+        res.status(500).json({success: false, "message": err});
+    }
+});
+
+// GET product details by prodId
+router.get("/:productId", verifyTokenAndAuthorization, async (req, res) => {
+    try{
+        const {productId} = req.params;
+        if(!productId){
+            return res.status(200).json({message: "Failed to fetch product id"});
+        }
+        // console.log("product-Id : ", productId);
+        const product = await Product.findById(productId);
+        res.status(200).json({product});
+    }catch(err){
+        console.log("get products by id error : ", err);
+        res.status(500).json(err);
+    }
+});
 module.exports = router;

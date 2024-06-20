@@ -3,10 +3,13 @@ import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 import CancelSharpIcon from "@mui/icons-material/CancelSharp";
 // import CloseIcon from '@mui/icons-material/Close';
 import DeleteOutlineTwoToneIcon from '@mui/icons-material/DeleteOutlineTwoTone';
-import addProduct from "../assets/images/addProduct.jpg";
+import addProduct from "../../assets/images/addProduct.jpg";
 import axios from "axios";
-import { useUserAuth } from "../context/UserAuthContext";
-import {axiosInstance} from "../Api_calls/API";
+import { useUserAuth } from "../../context/UserAuthContext";
+import {axiosInstance} from "../../Api_calls/API";
+import Footer from "../../Components/Footer";
+import Navbar from "../../Components/Navbar";
+import AdminNavbar from "../../Components/Admin/AdminNavbar";
 
 const AddProduct = () => {
   const [title, setTitle] = useState('');
@@ -134,9 +137,11 @@ const AddProduct = () => {
   };
 
   return (
-    <div className="px-10 py-8">
-      <div className="bold text-[2.5rem] font-ubuntu ">Add Products</div>
-      <hr className="border-[1px] border-y-zinc-500 mb-5" />
+    <>
+    <Navbar/>
+    <div className="flex bg-[#f6f5f5] ">
+      <AdminNavbar/>
+    <div className="flex-1 px-10 py-8">
       <div className="flex flex-row">
         <div className="flex-1">
           <div className="w-[90%]  flex flex-col gap-3">
@@ -150,7 +155,7 @@ const AddProduct = () => {
                 className="flex-1 ml-3 border-2 border-zinc-500 py-1 px-2"
                 onChange={(e) => setValues(setTitle, e.target.value)}
                 value={title}
-              ></input>
+                ></input>
             </div>
             <div className="flex flex-row justify-between">
               <div>
@@ -164,7 +169,7 @@ const AddProduct = () => {
                     padding: "0.3em 1em",
                     border: "2px solid #808080",
                   }}
-                >
+                  >
                   <option value="" selected>-select-</option>
                   {category &&
                     // console.log(category) &&
@@ -183,7 +188,7 @@ const AddProduct = () => {
                   className="border-2 ml-3 border-zinc-500 py-1 px-2"
                   onChange={(e) => setValues(setQuantity, e.target.value)}
                   value={quantity}
-                ></input>
+                  ></input>
               </div>
             </div>
 
@@ -197,7 +202,7 @@ const AddProduct = () => {
                   className="border-2 border-zinc-500 ml-2 py-1 px-2"
                   onChange={(e) => setValues(setPrice, e.target.value)}
                   value={price}
-                ></input>
+                  ></input>
                 {/* keep inside */}
               </div>
               <div>
@@ -209,7 +214,7 @@ const AddProduct = () => {
                   className="border-2 border-zinc-500 ml-2 py-1 px-2"
                   onChange={(e) => setValues(setDiscount, e.target.value)}
                   value={discount}
-                ></input>
+                  ></input>
               </div>
             </div>
 
@@ -242,7 +247,7 @@ const AddProduct = () => {
                             // console.log(ele);
                             return ele;
                           }))}
-                        ></input>
+                          ></input>
                         <span>:</span>
                         <input
                           id="aboutItem"
@@ -281,7 +286,7 @@ const AddProduct = () => {
                 className="border-2 w-[100%] border-zinc-500 py-1 px-2"
                 onChange={(e)=> setValues(setDescription, e.target.value)}
                 value={description}
-              ></textarea>
+                ></textarea>
             </div>
 
             <div>
@@ -295,9 +300,9 @@ const AddProduct = () => {
                   className="border-2 border-zinc-500 py-1 px-2"
                   value={tag}
                   onChange={(e)=>setTag(e.target.value)}
-                ></input>
+                  ></input>
                   {/* <AddCircleOutlineIcon className="cursor-pointer" /> */}
-                  <span className="border-2 border-black py-1 px-2 bg-green-500 text-white cursor-pointer" onClick={()=>addTag()}>ADD</span>
+                  <span className="border-2 border-black py-1 px-2 bg-orange-500 text-white cursor-pointer" onClick={()=>addTag()}>ADD</span>
                 </div>
                 {
                   tags && 
@@ -323,7 +328,7 @@ const AddProduct = () => {
                   multiple
                   className="cursor-pointer"
                   onChange={(e)=>addFile(e.target.files)}
-                ></input>
+                  ></input>
               </div>
               <div className="p-1 flex flex-wrap flex-row">
                 {files && 
@@ -339,33 +344,35 @@ const AddProduct = () => {
                 ))}
               </div>
             </div>
-            <div className="relative flex-1">
-              <input
-                type="submit"
-                className="px-4 py-2 rounded-md bg-green-500 cursor-pointer w-full"
-                onClick={(e) => handleSubmit(e)}
-              />
-              {/* className={`absolute left-0 bottom-0 top-0 opacity-20 bg-zinc-800`} */}
-              <span
-                style={{ 
-                  position: "absolute",
-                  left: "0",
-                  bottom: "0",
-                  top: "0",
-                  // opacity: 0.5,
-                  backgroundColor: "rgba(0, 0, 0, 0.3)",
-                  width: `${uploadProgress}%`,  // TODO : NOT WORKING -DIRECT 100% GIVING
-                  borderRadius: "0.375rem"
-                }}>
-              </span>
-            </div>
           </div>
         </div>
-        <div className="flex-1 hidden lg:block">
+        <div className="flex-1 flex items-center justify-center">
           <img src={addProduct}></img>
         </div>
       </div>
+      <div className="relative flex items-center justify-center">
+        <input
+          type="submit"
+          className="px-4 py-2 rounded-md bg-orange-500 text-white cursor-pointer w-[70%]"
+          onClick={(e) => handleSubmit(e)}
+          />
+        {/* className={`absolute left-0 bottom-0 top-0 opacity-20 bg-zinc-800`} */}
+        <span
+          style={{ 
+            position: "absolute",
+            left: "0",
+            bottom: "0",
+            top: "0",
+            backgroundColor: "rgba(0, 0, 0, 0.3)",
+            width: `${uploadProgress}%`,  // TODO : NOT WORKING -DIRECT 100% GIVING
+            borderRadius: "0.375rem"
+          }}>
+        </span>
+      </div>
     </div>
+    </div>
+    <Footer/>
+    </>
   );
 };
 

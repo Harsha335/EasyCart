@@ -9,7 +9,7 @@ import { useDispatch } from "react-redux";
 import { removeAll } from "../redux/reducer/CartSlice";
 import { useNavigate } from "react-router-dom";
 
-const PAYMENT_SUCCESS_URL = "http://localhost:3000/transaction-success";    // not required
+const PAYMENT_SUCCESS_URL = "http://localhost:3000/cart/stripe-payment/transaction-success";    // not required
 
 const CheckoutForm = ({ address, products}) => {
     const dispatch = useDispatch();
@@ -70,7 +70,7 @@ const CheckoutForm = ({ address, products}) => {
             console.log("Transaction saved in db !!", response);
             setMessage("Transactions successful !!");
             dispatch(removeAll());
-            navigate("/transaction-success");
+            navigate("/cart/stripe-payment/transaction-success");
         }
         setIsLoading(false);
     };

@@ -42,6 +42,7 @@ const Card = ({product}) => {
       <div className="h-[264px] w-[250px] relative flex items-center justify-center">
           <img
             src={product?.image_url[0]}
+            alt={`${product?.title} img`}
             className="h-full  rounded-[10px] relative object-contain"
           ></img>
           <div className="absolute bottom-3 left-3 flex ">

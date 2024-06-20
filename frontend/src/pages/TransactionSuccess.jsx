@@ -5,8 +5,6 @@ import { Link } from 'react-router-dom'
 import ConfettiExplosion from 'react-confetti-explosion';
 
 const TransactionSuccess = () => {
-  const width = window.innerWidth || 300;
-  const height = window.innerHeight || 700;
   return (
     <>
         <Navbar/>
