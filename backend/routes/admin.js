@@ -281,10 +281,25 @@ router.get("/revenue/year", verifyTokenAndAdmin, async (req, res) =>{
         res.status(500).json({success: false, message: err});
     }
 });
-router.get("/topProducts", verifyTokenAndAdmin, (req, res) =>{
+router.get("/topProducts", verifyTokenAndAdmin, async (req, res) =>{
     try{
         const {limit} = req.query;
-        
+        const topProducts = await Purchase.aggregate([
+            { $unwind: "$products" }, // Unwind the products array
+            { 
+                $group: {
+                    _id: "$products.id",
+                    title: { $first: "$products.title" },
+                    image_url: { $first: "$products.image_url" },
+                    totalQuantity: { $sum: "$products.quantity_purchased" },
+                }
+            },
+            { $sort: { totalQuantity: -1 } }, // Sort by totalQuantity in descending order
+            { $limit: Number(limit) } // Limit to top 5 products
+        ]);
+
+        console.log("Top 5 Products: ", topProducts);
+        res.status(200).json({success: true, topProducts})
     }catch(err){
         console.log("Error @ admin/topProducts: ", err);
         res.status(500).json({success: false, message: err});

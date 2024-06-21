@@ -139,13 +139,13 @@ const AddProduct = () => {
   return (
     <>
     <Navbar/>
-    <div className="flex bg-[#f6f5f5] ">
+    <div className="bg-[#f6f5f5] flex flex-col lg:flex-row">
       <AdminNavbar/>
     <div className="flex-1 px-10 py-8">
       <div className="flex flex-row">
         <div className="flex-1">
-          <div className="w-[90%]  flex flex-col gap-3">
-            <div className="flex flew-row">
+          <div className="w-[90%]  flex flex-col gap-3 ">
+            <div className="flex flew-row flex-wrap">
               <label for="productTitle">Product Title</label>
               {/* <br /> */}
               <input
@@ -157,7 +157,7 @@ const AddProduct = () => {
                 value={title}
                 ></input>
             </div>
-            <div className="flex flex-row justify-between">
+            <div className="flex flex-row justify-between flex-wrap gap-3">
               <div>
                 <label for="category">Category</label>
                 <select
@@ -192,7 +192,7 @@ const AddProduct = () => {
               </div>
             </div>
 
-            <div className="flex flex-row justify-between">
+            <div className="flex flex-row justify-between flex-wrap gap-3">
               <div>
                 <label for="price">Price (₹)</label>
                 <input
@@ -229,7 +229,7 @@ const AddProduct = () => {
                   features.map((ele,index) => {
                     // console.log("ele: ", index,ele);
                     return (
-                      <div className="flex flex-row gap-2">
+                      <div className="flex flex-row gap-2 flex-wrap">
                         <input
                           id="aboutItem"
                           name="aboutItem"
@@ -282,8 +282,7 @@ const AddProduct = () => {
                 name="description"
                 type="text"
                 rows={5}
-                // cols={80}
-                className="border-2 w-[100%] border-zinc-500 py-1 px-2"
+                className="border-2 min-w-full border-zinc-500 py-1 md:px-2"
                 onChange={(e)=> setValues(setDescription, e.target.value)}
                 value={description}
                 ></textarea>
@@ -346,7 +345,7 @@ const AddProduct = () => {
             </div>
           </div>
         </div>
-        <div className="flex-1 flex items-center justify-center">
+        <div className="hidden md:flex items-center justify-center md:flex-1">
           <img src={addProduct}></img>
         </div>
       </div>

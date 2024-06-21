@@ -44,7 +44,7 @@ const CartCard = ({product}) => {
         </div>
         <div className='p-4 flex-1 flex flex-col justify-between'>
             <div className='flex flex-col gap-2 '>
-                {/* NOT WORKING ELLIPSIS */}
+                {/* TODO: NOT WORKING ELLIPSIS */}
                 <Link to={`/products/${product?._id}`} className="text-2xl overflow-ellipsis font-rubik mb-1">
                     {product?.title}
                 </Link>
