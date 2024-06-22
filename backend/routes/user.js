@@ -6,7 +6,7 @@ const router = express.Router();
 
 //UPDATE user with id
 router.put("/:id", verifyTokenAndAuthorization, async (req,res)=>{
-    if(req.body.password){
+    if(req.body.password){  // TODO : for updating password
         const encryptedPassword = CryptoJS.AES.encrypt(req.body.password,process.env.SECRET_KEY).toString();
         req.body.password = encryptedPassword;
     }
@@ -54,8 +54,12 @@ router.get("/find/:id", verifyTokenAndAuthorization,async (req, res)=>{
 //GET, find all users - Admin
 router.get("/all", verifyTokenAndAdmin, async (req, res)=>{
     try{        
-        const users = await User.find();
-        // const {password, ...others} = user._doc;
+        const allUsers = await User.find();
+        const users = allUsers.map((user) => {
+            const {id:_id, user_name, email, isAdmin, createdAt} = user;
+            return {id:_id, user_name, email, isAdmin, createdAt};
+        });
+        console.log("Users : ", users);
         res.status(200).json({"success":true, users});
     }catch(err){
         res.status(500).json({"success":false, "message": err});

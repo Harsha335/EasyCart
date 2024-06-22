@@ -64,7 +64,8 @@ const Register = () => {
       navigate("/");
     }
     catch(err){
-      setError(err.message);
+      console.log(err);
+      setError(err?.message);
     }
   }
   // const handleRegister=(e)=>{
@@ -79,6 +80,7 @@ const Register = () => {
           <span className="flex flex-col">
             <div>
               <div className="text-red-500">{error && error}</div>
+              {/*   TODO : ADD USER NAME */}
               <span className="font-ubuntu text-lg px-1">User Email</span>
               <div>
                 <input

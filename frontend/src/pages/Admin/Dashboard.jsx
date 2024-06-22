@@ -107,6 +107,9 @@ const Dashboard = () => {
 
   const [topProducts, setTopProducts] = useState([]);
   const [limit, setLimit] = useState(5);
+  const putLimit = (value) => {
+    setLimit(value);
+  }
   useEffect(() => {
     const getTopProducts = async () => {
       try{
@@ -131,7 +134,7 @@ const Dashboard = () => {
                 <DashboardCard title="Orders" value={ordersCount} delta_per={ordersDeltaPer} color="orange" Icon={ShoppingCartIcon}/>
                 <DashboardCard title="Revenue" value={totalRevenue} delta_per={revenueDeltaPer} color="green" Icon={AccountBalanceWalletIcon}/>
             </div>
-            <div className='flex-1 flex flex-col xl:flex-row gap-4'>
+            <div className='max-h-[30rem] flex flex-col xl:flex-row gap-4'>
                 <div className='flex-1 bg-white rounded-xl drop-shadow-lg p-4 flex flex-col '>
                     <div className='flex flex-row justify-between'>
                       <div className='font-semibold text-2xl'>Revenue</div>
@@ -147,9 +150,15 @@ const Dashboard = () => {
                       {revenue && <RevenueChart revenue={revenue} timeUnit={timeUnit} tooltipTitle={tooltipTitle} displayXscale={displayXscale}/>}
                     </div>
                 </div>
-                <div className='flex-1 xl:w-96 bg-white rounded-xl drop-shadow-lg p-4 flex flex-col '>
-                    <div className='font-semibold text-2xl'>Top Selling Products</div>
-                    {/* <input type='text' className='focus:outline-none border-b-2 border-black w-8'/>  */}
+                <div className='w-full xl:w-96 bg-white rounded-xl drop-shadow-lg p-4 flex flex-col '>
+                    <div className='flex justify-between'>
+                      <span className='font-semibold text-2xl '>Top Selling Products</span>
+                      <select className='p-1 cursor-pointer' onChange={(e) => putLimit(e.target.value)}>
+                          <option value="5">Top 5</option>
+                          <option value="10">Top 10</option>
+                          <option value="50">Top 50</option>
+                        </select>
+                    </div>
                     <div className='p-4 flex flex-col overflow-auto gap-2'>
                       {topProducts &&
                         topProducts.map((product) => {

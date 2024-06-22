@@ -19,6 +19,9 @@ import StripePayment from "./pages/StripePayment";
 import TransactionSuccess from "./pages/TransactionSuccess";
 import Orders from "./pages/Orders";
 import Dashboard from "./pages/Admin/Dashboard";
+import UserManagement from "./pages/Admin/UserManagement";
+import ProductManagement from "./pages/Admin/ProductManagement";
+import OrderManagement from "./pages/Admin/OrderManagement";
 
 function App() {
   return (
@@ -38,6 +41,9 @@ function App() {
           <Route exact path="/category/:categoryId" element={<ProtectedRoute><Category/></ProtectedRoute>}/>
           <Route exact path="/products/:productId" element={<ProtectedRoute><Product/></ProtectedRoute>}/>
           <Route exact path="/admin/dashboard" element={<ProtectedAdminRoute><Dashboard/></ProtectedAdminRoute>}/>
+          <Route exact path="/admin/users" element={<ProtectedAdminRoute><UserManagement/></ProtectedAdminRoute>}/>
+          <Route exact path="/admin/products" element={<ProtectedAdminRoute><ProductManagement/></ProtectedAdminRoute>}/>
+          <Route exact path="/admin/orders" element={<ProtectedAdminRoute><OrderManagement/></ProtectedAdminRoute>}/>
           <Route exact path="/admin/add-product" element={<ProtectedAdminRoute><AddProduct/></ProtectedAdminRoute>}/>
           <Route path="*" element={<PageNotFound/>}/>
         </Routes>

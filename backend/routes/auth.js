@@ -6,12 +6,16 @@ const jwt = require("jsonwebtoken");
 router.post("/register",async (req,res)=>{
     // console.log("-----------------");
     // console.log(req.body);
-    const encryptedPassword = CryptoJS.AES.encrypt(req.body.password,process.env.SECRET_KEY).toString();
-    const user = new User({
-        email : req.body.email,
-        password : encryptedPassword
-    });
     try{
+        const encryptedPassword = CryptoJS.AES.encrypt(req.body.password,process.env.SECRET_KEY).toString();
+        const user = new User({
+            email : req.body.email,
+            password : encryptedPassword
+        });
+        const isUserExist = User.findOne({email: req.body.email});
+        if(isUserExist){
+            return res.status(409).json({success: false, message: "User Email already exits"});
+        }
         const savedUser = await user.save();
         console.log(savedUser);
         res.status(201).json({"message": "user created successfully"});

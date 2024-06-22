@@ -61,7 +61,7 @@ const OrderPopup = ({order,setOrderPopupItem}) => {
                                 <img src={product?.image_url} width="20%" className='object-contain '/>
                                 <div className='flex-1 flex flex-col justify-around p-5 '>
                                     <div className='flex justify-between '>
-                                    <span className='max-w-56 font-semibold text-ellipsis whitespace-nowrap overflow-hidden'>{product?.title}</span>
+                                    <span className='w-56 font-semibold text-ellipsis whitespace-nowrap overflow-hidden'>{product?.title}</span>
                                     <span>₹ {numberFormatter(product?.unit_price)}</span>
                                     </div>
                                     <div className='flex justify-between '>

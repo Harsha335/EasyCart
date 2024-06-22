@@ -63,6 +63,7 @@ export function UserAuthContextProvider({children}){
             // localStorage.setItem("accessToken", accessToken);
         }catch(error){
             console.log("ERROR @ userSignup : ", error);
+            throw new Error(error?.response?.data?.message);
         }
     }
     async function logIn(emailId,password)
