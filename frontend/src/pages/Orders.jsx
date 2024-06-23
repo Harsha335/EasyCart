@@ -21,6 +21,13 @@ const Orders = () => {
     getOrders();
   },[]);
 
+  const statusOptionColors = {
+    abort :'bg-red-500',
+    confirm:'bg-blue-500',
+    shipping:'bg-orange-500',
+    delivered:'bg-green-500'
+  }
+
   const [orderPopupItem, setOrderPopupItem] = useState(null);
   const OrderPopupActivate = (order) => {
     setOrderPopupItem(order);
@@ -61,7 +68,8 @@ const Orders = () => {
                 <th>Order Amount</th>
                 <th>Payment Status</th>
                 <th>Order Status</th>
-                <th>Date</th>
+                <th>Order Date</th>
+                <th>Delivery Date</th>
               </tr>
               {
                 orders.map(order => {
@@ -69,9 +77,10 @@ const Orders = () => {
                     <tr className='cursor-pointer' onClick={() => OrderPopupActivate(order)}>
                       <td>{order?._id}</td>
                       <td>₹ {numberFormatter(order?.amount)}</td>
-                      <td>{order?.payment_status}</td>
-                      <td>{order?.status}</td>
+                      <td className={`${order?.payment_status === "success" ? "text-green-600" : "text-red-500"}`}>{order?.payment_status}</td>
+                      <td className={`text-white ${statusOptionColors[order?.status]}`}>{order?.status}</td>
                       <td>{getDate(new Date(order?.createdAt))}</td>
+                      <td>{getDate(new Date(order?.deliveryAt))}</td>
                     </tr>
                   )
                 })

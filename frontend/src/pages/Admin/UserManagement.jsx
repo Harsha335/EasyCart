@@ -26,7 +26,8 @@ const UserManagement = () => {
   const columns = useMemo(() => [
     {
       Header: "User Id",
-      accessor: "id"
+      accessor: "id",
+      disableSortBy: true
     },
     {
       Header: "User Name",
@@ -65,14 +66,15 @@ const UserManagement = () => {
         >
           Delete
         </span>
-      )
+      ),
+      disableSortBy: true
     },
   ], []);
 
   const {getTableProps, getTableBodyProps, headerGroups, page, prepareRow, nextPage, previousPage, canPreviousPage, canNextPage, state:{pageIndex}, pageCount, gotoPage} = useTable({
       columns,
       data: users,
-      initialState: {pageSize: 10},
+      initialState: {pageSize: 8},
   }, useSortBy, usePagination);
 
   const saveAction = async (e, id, value) => {
@@ -121,10 +123,9 @@ const UserManagement = () => {
       </style>
       <div className="min-h-screen flex flex-col lg:flex-row">
         <AdminNavbar/>
-        <div className='flex-1'>
-            <div className='overflow-auto'>
+        <div className='flex-1 p-1'>
                 <div className='font-bold text-3xl p-4'>User Management</div>
-                <div className='relative'>
+                <div>
                     <table className='w-full' {...getTableProps()}>
                       <thead>
                         {
@@ -197,7 +198,6 @@ const UserManagement = () => {
                       <button disabled={pageIndex === pageCount-1} onClick={() => gotoPage(pageCount-1)} className="border-black border-2 rounded-md font-bold text-xl w-8 pb-1 ">{"»"}</button>
                     </div>
                 </div>
-            </div>
         </div>
       </div>
       <Footer />

@@ -22,55 +22,60 @@ const CheckoutForm = ({ address, products}) => {
     const [isLoading, setIsLoading] = useState(false);
  
     const handleSubmit = async (e) => {
-        e.preventDefault();
-        if (!stripe || !elements) return;
- 
-        setIsLoading(true);
-        setMessage("Payment in Progress");
- 
-        const {error, paymentIntent} = await stripe.confirmPayment({
-            elements,
-            confirmParams: {
-                return_url: PAYMENT_SUCCESS_URL,
-            },
-            redirect: "if_required",
-        });
-        // alert("comming..");
-        if (error){
-            setMessage(error?.message);
-            console.log("ERROR at checkout form : ", error.message);
-        }
-        // else if(paymentIntent && paymentIntent.status === "succeeded"){
-        //     // Store address and products in the database
-        //     const response = await axiosInstance.post("/api/payment/save", {
-        //         paymentIntentId: paymentIntent.id,
-        //         products,
-        //         address,
-        //         payment_status: "success"
-        //     });
-        //     console.log("Transaction saved in db !!", response);
-        //     // setMessage("Payment status: " + paymentIntent.status+"🎉");
-        // }
-        // else{
-        //     const response = await axiosInstance.post("/api/payment/save", {
-        //         paymentIntentId: paymentIntent.id,
-        //         products,
-        //         address,
-        //         payment_status: "failed"
-        //     });
-        //     console.log("Transaction saved in db !!", response);
-        //     // setMessage("Unexpected state !!");
-        // }
-        else{
-            const response = await axiosInstance.post("/api/payment/save", {
-                paymentIntentId: paymentIntent.id,
-                products,
-                address
+        try
+        {
+            e.preventDefault();
+            if (!stripe || !elements) return;
+     
+            setIsLoading(true);
+            setMessage("Payment in Progress");
+     
+            const {error, paymentIntent} = await stripe.confirmPayment({
+                elements,
+                confirmParams: {
+                    return_url: PAYMENT_SUCCESS_URL,
+                },
+                redirect: "if_required",
             });
-            console.log("Transaction saved in db !!", response);
-            setMessage("Transactions successful !!");
-            dispatch(removeAll());
-            navigate("/cart/stripe-payment/transaction-success");
+            // alert("comming..");
+            if (error){
+                setMessage(error?.message);
+                console.log("ERROR at checkout form : ", error.message);
+            }
+            // else if(paymentIntent && paymentIntent.status === "succeeded"){
+            //     // Store address and products in the database
+            //     const response = await axiosInstance.post("/api/payment/save", {
+            //         paymentIntentId: paymentIntent.id,
+            //         products,
+            //         address,
+            //         payment_status: "success"
+            //     });
+            //     console.log("Transaction saved in db !!", response);
+            //     // setMessage("Payment status: " + paymentIntent.status+"🎉");
+            // }
+            // else{
+            //     const response = await axiosInstance.post("/api/payment/save", {
+            //         paymentIntentId: paymentIntent.id,
+            //         products,
+            //         address,
+            //         payment_status: "failed"
+            //     });
+            //     console.log("Transaction saved in db !!", response);
+            //     // setMessage("Unexpected state !!");
+            // }
+            else{
+                const response = await axiosInstance.post("/api/payment/save", {
+                    paymentIntentId: paymentIntent.id,
+                    products,
+                    address
+                });
+                console.log("Transaction saved in db !!", response);
+                setMessage("Transactions successful !!");
+                dispatch(removeAll());
+                navigate("/cart/stripe-payment/transaction-success");
+            }
+        }catch(err){
+            console.log("ERROR at transaction saving : ", err);
         }
         setIsLoading(false);
     };

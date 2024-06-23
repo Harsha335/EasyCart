@@ -60,6 +60,8 @@ router.post("/save", verifyTokenAndAuthorization, async (req, res) => {
     try {
         const userId = req.user.id;
         const { paymentIntentId, products, address } = req.body;
+        const deliveryAt = new Date();
+        deliveryAt.setDate(deliveryAt.getDate() + 7);
         // console.log("--------------------- payment save in db -------------");
         // console.log(userId,{ paymentIntentId, products, address });
         const productDetails = await Promise.all(products.map(async item => {
@@ -90,6 +92,7 @@ router.post("/save", verifyTokenAndAuthorization, async (req, res) => {
             amount,
             status,
             address,
+            deliveryAt,
         });
         // console.log("Purchasing : ", newOrder);
         await newOrder.save({ session });

@@ -306,4 +306,29 @@ router.get("/topProducts", verifyTokenAndAdmin, async (req, res) =>{
     }
 });
 
+router.get("/allOrders", verifyTokenAndAdmin, async (req, res) => {
+    try{
+        const orders = await Purchase.find();
+        res.status(200).json({success: true, orders});
+    }catch(err){
+        console.log("Error @ admin/allOrders: ", err);
+        res.status(500).json({success: false, message: err});
+    }
+});
+
+// UPDATE PURCHASE
+router.put("/purchase/:id", verifyTokenAndAdmin, async (req, res) => {
+    try{
+        const {id} = req.params;
+        const {key,value} = req.body;
+        await Purchase.findByIdAndUpdate(id, {
+            $set : {[key]:value}
+        });
+        res.status(200).json({success: true, message:"Order successfully updated!!"});
+    }catch(err){
+        console.log("Error @ admin/allOrders: ", err);
+        res.status(500).json({success: false, message: err});
+    }
+});
+
 module.exports = router;

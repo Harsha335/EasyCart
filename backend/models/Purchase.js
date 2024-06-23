@@ -37,7 +37,8 @@ const PurchaseSchema = new mongoose.Schema({
         },
         default: "abort"
     },
-    address : {type : addressType, required: true}
+    address : {type : addressType, required: true},
+    deliveryAt : {type: Date}
 },{timestamps: true});
 
 module.exports = new mongoose.model("Purchase", PurchaseSchema);

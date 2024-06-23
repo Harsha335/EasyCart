@@ -101,7 +101,7 @@ router.get("/category/:categoryId", verifyTokenAndAuthorization, async (req, res
         let {page,size} = req.query;
         if(!page)   page = 1;
         if(!size)   size = 5;
-                                                        //include --> 'title' , notInclude -->'-title'
+                                                //include --> 'title' , notInclude -->'-title' (or) {title:1,price: 0} --> include title, notInclude price
         const products = await Product.find({categoryId},'title image_url categoryId price rating').skip((page-1)*size).limit(size);
         const totalSize = (await Product.find({categoryId})).length;
         res.status(200).json({products, totalSize});
@@ -240,6 +240,85 @@ router.get("/productsCount", verifyTokenAndAdmin, async (req, res) => {
         res.status(200).json({success: true, productsCount: allProductsCount, productsDeltaPer: recentProductsPercentage});
     }catch(err){
         console.log("Error @ /productsCount : ",err);
+        res.status(500).json({success: false, "message": err});
+    }
+});
+
+// GET ALL PRODUCTS FOR ADMIN , PROJECT MANAGEMENT
+router.get("/allProducts", verifyTokenAndAdmin, async (req, res) => {
+    try{
+        // _id(optional),image_url[0],title,categoryId(optional),quantity,price,discount,rating
+        const products = await Product.aggregate([
+            {
+              $project: {
+                _id: 1,
+                title: 1,
+                image_url: { $arrayElemAt: ["$image_url", 0] }, // $first can be replaced with $arrayElemAt
+                categoryId: { $toObjectId: "$categoryId" }, 
+                quantity: 1,
+                price: 1,
+                discount: 1,
+                rating: 1,
+              }
+            },
+            {
+              $lookup: {
+                from: "categories", // the name of the Category collection
+                localField: "categoryId",
+                foreignField: "_id",
+                as: "categoryDetails"
+              }
+            },
+            {
+                $unwind: {
+                  path: "$categoryDetails",
+                }
+            },
+            {
+              $project: {
+                _id: 1,
+                title: 1,
+                image_url: 1,
+                categoryId: 1,
+                quantity: 1,
+                price: 1,
+                discount: 1,
+                rating: 1,
+                categoryTitle: "$categoryDetails.title"
+              }
+            }
+          ]);
+        res.status(200).json({success: true, products});
+    }catch(err){
+        console.log("Error @ /allProducts : ",err);
+        res.status(500).json({success: false, "message": err});
+    }
+});
+
+//updating product details
+router.put("/:productId", verifyTokenAndAdmin, async (req, res) => {
+    try{
+        const {productId} = req.params;
+        const product = await Product.findByIdAndUpdate(productId, {
+            $set: req.body
+        },{new: true});
+        // _id(optional),image_url[0],title,categoryId(optional),quantity,price,discount,rating
+        const {_id, title, categoryId, quantity, price, discount, rating} = product;
+        res.status(200).json({success: true, product : {_id, image_url: product.image_url[0], title, categoryId, quantity, price, discount, rating}});
+    }catch(err){
+        console.log("Error @ updating product details : ",err);
+        res.status(500).json({success: false, "message": err});
+    }
+});
+
+//delete product details
+router.delete("/:productId", verifyTokenAndAdmin, async (req, res) => {
+    try{
+        const {productId} = req.params;
+        await Product.findByIdAndDelete(productId);
+        res.status(200).json({success: true, message: "Product successfully deleted"});
+    }catch(err){
+        console.log("Error @ updating product details : ",err);
         res.status(500).json({success: false, "message": err});
     }
 });
