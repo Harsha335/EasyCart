@@ -11,7 +11,7 @@ const verifyToken = (req,res,next)=>{
             if(err || user === undefined)
             {
                 console.log("verifyToken ERROR ",err);
-                console.log("redirect to : ",`${process.env.CLIENT_URL}/login`);
+                console.log("in server redirect to : ",`${process.env.CLIENT_URL}/login`);
                 return res.status(401).send({message: "Token is invalid"});
             }
             req.user = user;
@@ -27,13 +27,14 @@ const verifyToken = (req,res,next)=>{
 
 const verifyTokenAndAuthorization = (req, res, next) =>{
     verifyToken(req, res, ()=>{
-        console.log(req.user,req.headers);
+        console.log(req.user);
         if(req.user.id === req.headers?.id || req.user.isAdmin)
         {
             next();
         }
         else{
             console.log("user does not match");
+            console.log(req.user.id+" != "+req.headers?.id);
             res.status(403).json({message: "You are not allowed to do that!"})
         }
     })
@@ -41,7 +42,7 @@ const verifyTokenAndAuthorization = (req, res, next) =>{
 
 const verifyTokenAndAdmin = (req, res, next) =>{
     verifyToken(req, res, ()=>{
-        // console.log(req.user);
+        console.log(req.user);
         if(req.user.isAdmin)
         {
             next();

@@ -75,13 +75,14 @@ export function UserAuthContextProvider({children}){
                 // console.log("sending req to: ", `${process.env.REACT_APP_SERVER_URL}/api/auth/login`);
                 const res = await axios.post(`${process.env.REACT_APP_SERVER_URL}/api/auth/login`, {"email": emailId, password});
                 console.log("login : ",res);
-                const {id, email, isAdmin, accessToken, likedProductIds} = res.data;
+                const {id, email, isAdmin, accessToken, refreshToken, likedProductIds} = res.data;
                 dispatch(addUserDetails({email, isAdmin, likedProductIds}));
                 // localStorage.removeItem("user");
                 encryptData("user", email+" "+isAdmin+" "+id);
                 // console.log(decryptData("user"));
                 // localStorage.removeItem("accessToken");
                 localStorage.setItem("accessToken", accessToken);
+                localStorage.setItem("refreshToken", refreshToken);
             }catch(error){
                 console.log("ERROR @ userlogin : ", error);
             }
@@ -91,6 +92,7 @@ export function UserAuthContextProvider({children}){
     function logOut(){
         localStorage.removeItem("user");
         localStorage.removeItem("accessToken");
+        localStorage.removeItem("refreshToken");
         dispatch(removeUserDetails());
         // setUser(null);
     }

@@ -327,11 +327,14 @@ router.delete("/:productId", verifyTokenAndAdmin, async (req, res) => {
 router.get("/:productId", verifyTokenAndAuthorization, async (req, res) => {
     try{
         const {productId} = req.params;
-        if(!productId){
+        if(!productId || productId === "undefined"){
             return res.status(200).json({message: "Failed to fetch product id"});
         }
         // console.log("product-Id : ", productId);
         const product = await Product.findById(productId);
+        if(!product){
+            return res.status(400).json({message:"product not found"});
+        }
         res.status(200).json({product});
     }catch(err){
         console.log("get products by id error : ", err);
