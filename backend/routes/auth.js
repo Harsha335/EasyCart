@@ -3,21 +3,52 @@ const CryptoJS = require("crypto-js");
 const router = require("express").Router();
 const jwt = require("jsonwebtoken");
 const passport = require('../utils/passport');
+const multer = require('multer');
+const cloudinary = require('../utils/cloudinary');
 
+// Multer configuration
+const storage = multer.memoryStorage();
+const upload = multer({ storage: storage });    // use when we send data via "form-data" - separates files from other data with req.file & req.body
 
-router.post("/register",async (req,res)=>{
-    // console.log("-----------------");
+// SAVE IMAGE INTO CLOUDINARY ARTICLE 👏 - https://medium.com/@joeeasy_/uploading-images-to-cloudinary-using-multer-and-expressjs-f0b9a4e14c54
+const convertImageToBase64URL = (buffer, imageType = 'png') => {
+    try {
+      const base64String = Buffer.from(buffer).toString('base64');
+      return `data:image/${imageType};base64,${base64String}`;
+    } catch (error) {
+      throw new Error(`file ${buffer} no exist `)
+    }
+}
+
+router.post("/register", upload.single('profileImg'),async (req,res)=>{
+    console.log("-----------------");
     // console.log(req.body);
     try{
+        let profileImg = req.file;
+        if(profileImg){ // profileImg then upload to multer
+            const file = convertImageToBase64URL(profileImg.buffer, profileImg.mimetype.split("/")[1]);   //convert buffer to base64
+            // console.log("file-base64 : ",file);
+            const cloudinary_img = await cloudinary.uploader.upload(file, {
+                folder: "easy_cart_profiles",
+                // width: 300,
+                // crop: "scale"
+            });
+            profileImg = cloudinary_img.url;
+            console.log("profile img url : ",cloudinary_img.url);  //.uri
+        }
         const encryptedPassword = CryptoJS.AES.encrypt(req.body.password,process.env.SECRET_KEY).toString();
         const user = new User({
+            user_name: req.body.userName,
             email : req.body.email,
-            password : encryptedPassword
+            password : encryptedPassword,
+            profile_img_url: profileImg,
         });
-        const isUserExist = User.findOne({email: req.body.email});
+        console.log(user);
+        const isUserExist = await User.findOne({email: req.body.email});
         if(isUserExist){
             return res.status(409).json({success: false, message: "User Email already exits"});
         }
+        console.log("user do not exist , adding into db");
         const savedUser = await user.save();
         console.log(savedUser);
         res.status(201).json({"message": "user created successfully"});

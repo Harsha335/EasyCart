@@ -325,6 +325,7 @@ const AddProduct = () => {
                   name="addImage"
                   type="file"
                   multiple
+                  accept="image/*"
                   className="cursor-pointer"
                   onChange={(e)=>addFile(e.target.files)}
                   ></input>

@@ -49,13 +49,21 @@ export function UserAuthContextProvider({children}){
         }
     }
 
-    async function signUp(emailId,password)
+    async function signUp(profileImg,userName,emailId,password)
     {
         // return createUserWithEmailAndPassword(auth,email,password);
         try{
+            const formData = new FormData();
+            formData.append('profileImg',profileImg);
+            formData.append('userName',userName);
+            formData.append('email',emailId);
+            formData.append('password',password);
             // console.log(emailId, password);
             // console.log("sending req to: ", `${process.env.REACT_APP_SERVER_URL}/api/auth/login`);
-            const res = await axios.post(`${process.env.REACT_APP_SERVER_URL}/api/auth/register`, {"email": emailId, password});
+            const res = await axios.post(`${process.env.REACT_APP_SERVER_URL}/api/auth/register`, formData,
+                {
+                    headers: {"Content-Type": "multipart/form-data"}
+                });
             console.log(res);
             // const {email, isAdmin, accessToken} = res.data;
             // encryptData("user", email+" "+isAdmin);

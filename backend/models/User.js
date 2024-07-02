@@ -14,6 +14,7 @@ const UserSchema = new mongoose.Schema(
         user_name: {type: String},
         email : {type: String, required: true, unique: true},
         password: {type: String, required: true},
+        profile_img_url: {type: String},
         isAdmin: {type: Boolean, default: false},
         likedProductIds: {type: [String]},    // liked id
         address: {type: addressType},
