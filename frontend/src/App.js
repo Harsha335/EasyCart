@@ -22,6 +22,7 @@ import Dashboard from "./pages/Admin/Dashboard";
 import UserManagement from "./pages/Admin/UserManagement";
 import ProductManagement from "./pages/Admin/ProductManagement";
 import OrderManagement from "./pages/Admin/OrderManagement";
+import GoogleSuccessSignIn from "./pages/GoogleSuccessSignIn";
 
 function App() {
   return (
@@ -30,6 +31,7 @@ function App() {
         <Routes>
           <Route exact path="/" element={<ProtectedRoute><Home/></ProtectedRoute>}/>  {/* TODO : CHANGE THE PROTECTED ROUTE */}
           <Route exact path="/login" element={<Login/>}/> {/* user!=null ?<Navigate to="/"/>: */}
+          <Route exact path="/googleSignin-success" element={<GoogleSuccessSignIn/>}/> {/* user!=null ?<Navigate to="/"/>: */}
           <Route exact path="/register" element={<Register/>}/>
           <Route exact path="/products" element={<ProtectedRoute><AllProducts/></ProtectedRoute>}/>
           <Route exact path="/wishList" element={<ProtectedRoute><WishList/></ProtectedRoute>}/>

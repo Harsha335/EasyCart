@@ -2,6 +2,8 @@ const User = require("../models/User");
 const CryptoJS = require("crypto-js");
 const router = require("express").Router();
 const jwt = require("jsonwebtoken");
+const passport = require('../utils/passport');
+
 
 router.post("/register",async (req,res)=>{
     // console.log("-----------------");
@@ -97,5 +99,21 @@ router.post("/login", async (req,res)=>{
     }
 });
 
+//google sign in
+router.get('/google', passport.authenticate('google', {scope: ['email', 'profile']}));
+
+router.get('/google/callback', 
+  passport.authenticate('google', { failureRedirect: 'http://localhost:3000/login' }),
+  (req, res) => {
+    // Successful authentication, send tokens to the client
+    const { user, accessToken, refreshToken } = req.user;
+    console.log(req.user);
+    const {_id, email, isAdmin, likedProductIds} = user;
+    const data = {id: _id, email, isAdmin, likedProductIds, accessToken, refreshToken};
+    const query = new URLSearchParams(data).toString();
+    res.redirect(`http://localhost:3000/googleSignin-success?${query}`);
+    // res.redirect(`http://localhost:3000?accessToken=${accessToken}&refreshToken=${refreshToken}`);
+  }
+);
 
 module.exports = router;

@@ -96,9 +96,18 @@ export function UserAuthContextProvider({children}){
         dispatch(removeUserDetails());
         // setUser(null);
     }
-    function googleSignIn(){
-        // const googleAuthProvider = new GoogleAuthProvider();
-        // return signInWithPopup(auth,googleAuthProvider);
+    async function googleSignIn(){
+        window.location.href = `${process.env.REACT_APP_SERVER_URL}/api/auth/google`;
+        // const res = await axios.get(`${process.env.REACT_APP_SERVER_URL}/api/auth/google`);
+        // console.log("login with GOogle : ",res);
+        // const {id, email, isAdmin, accessToken, refreshToken, likedProductIds} = res.data;
+        // dispatch(addUserDetails({email, isAdmin, likedProductIds}));
+        // // localStorage.removeItem("user");
+        // encryptData("user", email+" "+isAdmin+" "+id);
+        // // console.log(decryptData("user"));
+        // // localStorage.removeItem("accessToken");
+        // localStorage.setItem("accessToken", accessToken);
+        // localStorage.setItem("refreshToken", refreshToken);
     }
     // useEffect(()=>{
     //     const unsubscribe = onAuthStateChanged(auth,(currentUser)=>{

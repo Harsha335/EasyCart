@@ -1,3 +1,5 @@
+const dotenv = require("dotenv");
+dotenv.config();
 const express = require("express");
 const userRouter = require("./routes/user");
 const authRouter = require("./routes/auth");
@@ -7,9 +9,9 @@ const adminRouter = require("./routes/admin");
 const { mongoose } = require("mongoose");
 const bodyParser = require('body-parser');
 const cors = require('cors');
+const session = require('express-session');
+const passport = require('passport');
 
-const dotenv = require("dotenv");
-dotenv.config();
 
 const PORT = process.env.PORT || 5000;
 const app = express();
@@ -18,6 +20,22 @@ const corsOptions = {
     origin: process.env.CLIENT_URL
 };
 app.use(cors(corsOptions));
+
+app.use(session({ 
+  
+    // It holds the secret key for session 
+    secret: 'Your_Secret_Key', 
+  
+    // Forces the session to be saved 
+    // back to the session store 
+    resave: true, 
+  
+    // Forces a session that is "uninitialized" 
+    // to be saved to the store 
+    saveUninitialized: true
+})) 
+app.use(passport.initialize());
+app.use(passport.session());
 
 // app.use(express.urlencoded({ extended: true }));
 // app.use(express.json());

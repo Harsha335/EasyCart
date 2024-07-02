@@ -44,6 +44,8 @@ const Login = () => {
     e.preventDefault();
     setError("");
     try{
+      e.preventDefault();
+      await googleSignIn();
       // const result = await googleSignIn();
       // The signed-in user info.
       // const user = result.user;
