@@ -8,6 +8,7 @@ import { useUserAuth } from "../context/UserAuthContext";
 import { useSelector } from "react-redux";
 import { Badge } from "@mui/material";
 import SearchIcon from '@mui/icons-material/Search';
+import ManageProfile from "./ManageProfile";
 // import { auth } from "../assets/firebase";
 
 const Navbar = () => {
@@ -17,6 +18,11 @@ const Navbar = () => {
   const { logOut } = useUserAuth();
   const menuAction = () => {
     setMenuOpen(prev => !prev);
+  }
+
+  const [isProfileOpen, setIsProfileOpen] = useState(false);
+  const handleProfile = () => {
+    setIsProfileOpen(prev => !prev);
   }
 
   const userDetails = useSelector((store) => store.userReducer.userDetails);
@@ -110,11 +116,12 @@ const Navbar = () => {
             <div
               className=" flex items-center justify-around lg:absolute lg:bg-[#050458] lg:p-2 lg:w-24 lg:right-0 lg:hidden lg:group-hover:block cursor-pointer "
             >
-              <NavLink to="/profile" className="hover:text-orange-500">Profile</NavLink>
+              <div onClick={handleProfile} className="hover:text-orange-500">Profile</div>
               <div onClick={handleLogOut} className="hover:text-orange-500">Sign out</div>
             </div>
           </span>
       </div>
+        {isProfileOpen && <ManageProfile handleProfile={handleProfile}/>}
     </div>
   );
 };
