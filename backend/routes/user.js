@@ -37,7 +37,7 @@ router.put("/:id", verifyTokenAndAuthorization, upload.single('profileImg'), asy
             });
             profileImg = cloudinary_img.url;
             console.log("profile img url : ",cloudinary_img.url);  //.uri
-        }else{
+        }else if(req.body?.profile_img_url !== null && req.body?.profile_img_url !== undefined){
             profileImg = req.body.profile_img_url;
         }
         const updatedUser = await User.findByIdAndUpdate(req.params.id,{

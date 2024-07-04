@@ -57,6 +57,16 @@ const Product = () => {
     getComments();
   }, [productId]);
 
+  const [ratingMap, setRatingMap] = useState({});
+  useEffect(() => {
+    const ratingCurrMap = {1:0,2:0,3:0,4:0,5:0};
+    comments.forEach(comment => {
+      ratingCurrMap[Math.ceil(comment.rating)] += 1;
+    });
+    setRatingMap(ratingCurrMap);
+    console.log(ratingCurrMap);
+  },[comments]);
+
 
   const liked = useSelector(store => store.userReducer.userDetails.likedProductIds).includes(productId);
   const postLiked = async () => {
@@ -294,8 +304,9 @@ const Product = () => {
 
       {/* comments */}
       <div className="mx-2 my-5">
-        <div>
-          {/* IS POSTED CHANGE INTO ORIGINAL COMMENT ADD EDIT */}
+        <div className="flex flex-col lg:flex-row justify-between">
+          {/* TODO : IS POSTED CHANGE INTO ORIGINAL COMMENT ADD EDIT */}
+          <div className="">
           <span className="text-xl font-bold">Add a Comment</span>
           <div className="p-4 border-4 ">
             <span>
@@ -342,6 +353,32 @@ const Product = () => {
               >
                 Post
               </span>
+            </div>
+            </div>
+          </div>
+          <div className="flex justify-center flex-col m-5">
+            <span className="text-xl font-bold">Rating</span>
+            <div className="p-5 border-4 flex flex-row gap-5">
+              <div className="flex flex-col gap-1">
+                {[5,4,3,2,1].map((ele) => {
+                  return <div className="">
+                    <label for={ele+"star"}>{ele} star</label>
+                    <progress id={ele+"star"} value={ratingMap[ele]} max={product?.ratingCount} className="pl-2 pt-1 [&::-webkit-progress-bar]:h-3 [&::-webkit-progress-bar]:rounded-lg [&::-webkit-progress-value]:rounded-lg   [&::-webkit-progress-bar]:bg-slate-300 [&::-webkit-progress-value]:bg-orange-600 [&::-moz-progress-bar]:bg-violet-400"/>
+                  </div>
+                })}
+              </div>
+              <div className="flex items-center justify-center flex-col">
+                <span>Average Rating</span>
+                <span>{product?.rating} / 5</span>
+                <span>
+                  <Rating
+                      name="half-rating"
+                      value={product?.rating}
+                      precision={0.5}
+                      readOnly
+                    />
+                </span>
+              </div>
             </div>
           </div>
         </div>
