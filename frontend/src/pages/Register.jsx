@@ -65,9 +65,9 @@ const Register = () => {
 
   return (
     <div className="m-0 p-0 flex items-center justify-center w-[100vw] h-[100vh] bg-slate-200">
-      <div className="w-[70svw] h-[90svh] bg-white text-white rounded-lg flex flex-row">
-        <img src={registerIcon} width="60%"></img>
-        <div className="text-black flex flex-col justify-around my-20">
+      <div className="w-full sm:w-[70svw] h-[90svh] bg-white text-white rounded-lg flex flex-row items-center justify-center">
+        <img src={registerIcon} width="60%" className="hidden md:block"></img>
+        <div className="text-black flex flex-col justify-around my-20 gap-5">
           <span className="flex flex-col gap-3">
               <div className="text-red-500">{error && error}</div>
               <div>

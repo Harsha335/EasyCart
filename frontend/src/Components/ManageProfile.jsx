@@ -91,7 +91,7 @@ const ManageProfile = ({handleProfile}) => {
     }
 
     return (
-        <div className="text-black fixed bg-[rgba(0,0,0,0.2)] top-0 left-0 min-h-screen w-full flex items-center justify-center">
+        <div className="z-10 text-black fixed bg-[rgba(0,0,0,0.2)] top-0 left-0 min-h-screen w-full flex items-center justify-center">
             <div className='w-96 min-h-96 overflow-x-hidden overflow-y-auto-auto bg-white relative rounded-lg p-4 flex flex-col justify-between'>
                 <span className='absolute top-3 right-2 cursor-pointer hover:bg-slate-200 rounded-full p-1 ' onClick={()=>closeManageProfile()}><CloseIcon/></span>
                 <div className='p-3 flex flex-col gap-2'>

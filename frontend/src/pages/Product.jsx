@@ -5,6 +5,7 @@ import React, { useEffect, useState } from "react";
 import Navbar from "../Components/Navbar";
 import AddIcon from "@mui/icons-material/Add";
 import RemoveIcon from "@mui/icons-material/Remove";
+import DeleteIcon from '@mui/icons-material/Delete';
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import Card from "../Components/Card";
 import { Link, useParams } from "react-router-dom";
@@ -21,6 +22,15 @@ const Product = () => {
   const { productId } = useParams();
   const dispatch = useDispatch();
   const { decryptData } = useUserAuth();
+
+  // SCROLL TO TOP
+  useEffect(() => {
+    window.scrollTo({
+      top: 0,
+      left: 0,
+      behavior: "smooth"
+    });
+  }, [productId]);
 
   const [product, setProduct] = useState([]);
   useEffect(() => {
@@ -66,6 +76,20 @@ const Product = () => {
     setRatingMap(ratingCurrMap);
     console.log(ratingCurrMap);
   },[comments]);
+
+  const [similarProducts, setSimilarProducts] = useState([]);
+  useEffect(()=> {
+    const getSimilarProducts = async () => {
+      try{
+        const response = await axiosInstance.get(`/api/product/similarTo/${productId}`);
+        console.log("similar products : ",response);
+        setSimilarProducts(response.data.data);
+      }catch(err){
+        console.log("Error at client get similar products : ",err);
+      }
+    }
+    getSimilarProducts();
+  },[productId]);
 
 
   const liked = useSelector(store => store.userReducer.userDetails.likedProductIds).includes(productId);
@@ -155,7 +179,7 @@ const Product = () => {
   return (
     <>
       <Navbar />
-      <div className=" w-[100%] min-h-screen flex flex-col md:flex-row">
+      <div className="w-[100%] min-h-screen flex flex-col md:flex-row">
         {/* picture */}
         <div className="relative h-[75vh] flex-1 flex flex-col">
           {/* LIKE */}
@@ -189,7 +213,7 @@ const Product = () => {
           </div>
         </div>
 
-        <div className="flex-1  relative p-4 flex flex-col gap-3">
+        <div className="flex-1 relative p-4 flex flex-col gap-3">
           {/* title,price(discount),rating,description */}
           <div className="text-2xl font-rubik font-semibold mb-1">
             {product?.title}
@@ -282,15 +306,18 @@ const Product = () => {
                     {cartDetails === undefined ? "Add to Cart" : "Update Cart"}
                   </span>
                   {cartDetails &&
-                  <span
-                    className="bg-yellow-500 p-2 rounded-md cursor-pointer hover:text-[1.09em] hover:bg-red-500 transition-all duration-200 ease-in text-white"
-                    onClick={() => {
-                      postRemoveFromCart()
-                    }}
-                  >
-                    Remove from Cart  
-                    {/* TODO: remove icon */}
-                  </span>}
+                  <span onClick={() => {
+                    postRemoveFromCart()
+                  }}>
+                    <span
+                      className="hidden sm:block bg-yellow-500 p-2 rounded-md cursor-pointer hover:text-[1.09em] hover:bg-red-500 transition-all duration-200 ease-in text-white"
+                    >
+                    <span className=''>Remove from Cart</span>
+                  </span>
+
+                  <span className='text-red-500 sm:hidden'><DeleteIcon/></span> 
+                  </span>
+                  }
               {/* </div> */}
               {/* <div className="">
                 <span className="bg-orange-500 p-2 rounded-md cursor-pointer hover:text-[1.09em] transition-all duration-200 ease-in text-white">
@@ -304,9 +331,9 @@ const Product = () => {
 
       {/* comments */}
       <div className="mx-2 my-5">
-        <div className="flex flex-col lg:flex-row justify-between">
+        <div className="flex flex-col lg:flex-row justify-between lg:gap-10">
           {/* TODO : IS POSTED CHANGE INTO ORIGINAL COMMENT ADD EDIT */}
-          <div className="">
+          <div className="flex-1">
           <span className="text-xl font-bold">Add a Comment</span>
           <div className="p-4 border-4 ">
             <span>
@@ -334,8 +361,8 @@ const Product = () => {
               <textarea
                 placeholder="Comment"
                 rows={5}
-                cols={70}
-                className="border-2 border-neutral-500 p-1"
+                // cols={70}
+                className="w-full md:w-[70%] border-2 border-neutral-500 p-1"
                 value={commentData}
                 onChange={(e) => setCommentData(e.target.value)}
               ></textarea>
@@ -358,7 +385,7 @@ const Product = () => {
           </div>
           <div className="flex justify-center flex-col m-5">
             <span className="text-xl font-bold">Rating</span>
-            <div className="p-5 border-4 flex flex-row gap-5">
+            <div className="p-5 border-4 flex flex-col gap-5 md:flex-row">
               <div className="flex flex-col gap-1">
                 {[5,4,3,2,1].map((ele) => {
                   return <div className="">
@@ -384,7 +411,7 @@ const Product = () => {
         </div>
         <div>
           <span className="text-xl font-bold">Top Comments</span>
-          {comments.map((comment) => {
+          {comments.length != 0 ? comments.map((comment) => {
             return (
                 <div className="p-4 border-4 m-4">
                   <span>
@@ -408,21 +435,25 @@ const Product = () => {
                   </div>
                 </div>
             );
-          })}
+          }) :
+          <div className="p-4 flex items-center justify-center">
+            --NO COMMENTS--
+          </div>
+        }
         </div>
       </div>
       {/* suggested products */}
       <div className="m-4">
         <div className="text-2xl font-semibold ">You may Also Like</div>
-        <div className="bg-neutral-100 my-[15px] box-border w-[100%] h-[300px] p-4 rounded-[10px] shadow-inner flex flex-row flex-nowrap overflow-auto justify-around">
-          {" "}
-          {/*grid grid-cols-5 gap-4*/}
-          {/* USE GRID */}
-          <Card />
-          <Card />
-          <Card />
-          <Card />
-          <Card />
+        <div className='bg-neutral-100 my-[1rem] p-2 rounded-[10px] shadow-inner flex flex-row gap-8 items-center justify-around overflow-auto'>
+          {
+            similarProducts && 
+            similarProducts.map(product => {
+              return (
+                <Card product={product}/>
+              )
+            })
+          }
         </div>
       </div>
       <div className="flex items-center justify-center m-4">

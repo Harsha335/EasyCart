@@ -71,16 +71,16 @@ const Search = () => {
       <Navbar/>
       <div>
         <div className='flex items-center justify-center p-2'>
-            <span className=' border-black border-2 rounded-md'>
-                <input type='text' value={searchText} placeholder='Search...' onChange={e => setSearchText(e.target.value)} className='p-2 focus:outline-none rounded-md' size="70"/>
-                <span className='p-2 bg-orange-400 rounded-md cursor-pointer border-y-2 border-l-2 active:border-0 border-black' onClick={e => sendSearch(e)}>
+            <span className='border-black border-2 rounded-md  w-full md:w-[70%] flex flex-row justify-between'>
+                <input type='text' value={searchText} placeholder='Search...' onChange={e => setSearchText(e.target.value)} className='p-2 focus:outline-none rounded-md w-[95%]'/>
+                <button className='p-2 bg-orange-400 rounded-md cursor-pointer border-y-2 border-l-2 active:border-0 border-black' onClick={e => sendSearch(e)}>
                     <SearchIcon/>
-                </span>
+                </button>
             </span>
         </div>
-        <div className='flex'>
+        <div className='flex flex-col md:flex-row'>
             {/* FEATURES */}
-            <div className='flex-none w-80 flex flex-col gap-5 p-4 shadow-md'>
+            <div className='flex-none w-full md:w-80 flex flex-col gap-5 p-4 shadow-md'>
                 <span className='flex items-center justify-center font-ubuntu text-xl font-semibold'>
                     FILTERS
                 </span>
@@ -150,7 +150,7 @@ const Search = () => {
             {/* PRODUCTS */}
             {
                 products.length !== 0 ?
-                <div className="flex-1 bg-neutral-100 p-2 rounded-[10px] shadow-inner grid grid-cols-4 gap-y-8 overflow-auto">
+                <div className='bg-neutral-100 my-[1rem] p-2 rounded-[10px] shadow-inner flex flex-row gap-8 items-center justify-around overflow-auto'>
                     {products.map((product) => {
                         return <Card product={product} />;
                     })}

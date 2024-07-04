@@ -12,6 +12,11 @@ export const banner =[
     {
         id:3,
         name:"flash sale",
-        imgSrc:require("./images/banner3.jpeg")
+        imgSrc:require("./images/banner5.jpg")
+    },
+    {
+        id:4,
+        name:"flash sale",
+        imgSrc:require("./images/banner4.jpg")
     },
 ]

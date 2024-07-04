@@ -57,7 +57,7 @@ const Slider = () => {
               key={item.id}
               src={item.imgSrc}
               alt={item.name}
-              className={"min-w-full  object-cover"}
+              className={"min-w-full h-[85vh] object-cover"}
             />
           );
         })}

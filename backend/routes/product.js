@@ -7,6 +7,7 @@ const cloudinary = require('../utils/cloudinary');
 const Category = require('../models/Category');
 const Comment = require('../models/Comment');
 const User = require('../models/User');
+const { default: mongoose } = require('mongoose');
   
 // Multer configuration
 const storage = multer.memoryStorage();
@@ -56,7 +57,7 @@ router.post("/add-product", verifyTokenAndAdmin, upload.array("files"), async (r
         res.status(201).json(savedProduct);
     }catch(err){
         console.log("AddProduct Server error : ", err);
-        res.status(500).json(err);
+        res.status(500).json({success: false, "message": err});
     }
 });
 
@@ -70,7 +71,7 @@ router.post("/add-category", verifyTokenAndAdmin, async (req, res) => {
         res.status(200).json({"status" : "success", "message" : "category added successfully", data});
     }catch(err){
         console.log("Add category error: ", err);
-        res.status(500).json(err);
+        res.status(500).json({success: false, "message": err});
     }
 });
 
@@ -81,7 +82,7 @@ router.get("/getCategory/:categoryId", verifyTokenAndAuthorization, async (req, 
         res.status(200).json(data);
     }catch(err){
         console.log("get categories error : ", err);
-        res.status(500).json(err);
+        res.status(500).json({success: false, "message": err});
     }
 });
 
@@ -91,7 +92,7 @@ router.get("/all-categories", verifyTokenAndAuthorization, async (req, res) => {
         res.status(200).json(data);
     }catch(err){
         console.log("get categories error : ", err);
-        res.status(500).json(err);
+        res.status(500).json({success: false, "message": err});
     }
 });
 
@@ -107,7 +108,7 @@ router.get("/category/:categoryId", verifyTokenAndAuthorization, async (req, res
         res.status(200).json({products, totalSize});
     }catch(err){
         console.log("get category products error : ", err);
-        res.status(500).json(err);
+        res.status(500).json({success: false, "message": err});
     }
 });
 
@@ -126,7 +127,7 @@ router.post("/comment", verifyTokenAndAuthorization, async (req, res) => {
         res.status(200).json({newComment});
     }catch(err){
         console.log("post comment error : ", err);
-        res.status(500).json(err);
+        res.status(500).json({success: false, "message": err});
     }
 });
 
@@ -137,7 +138,7 @@ router.get("/:productId/comment", verifyTokenAndAuthorization, async (req, res) 
         res.status(200).json({comments});
     }catch(err){
         console.log("get comment error : ", err);
-        res.status(500).json(err);
+        res.status(500).json({success: false, "message": err});
     }
 });
 
@@ -158,6 +159,7 @@ router.post("/like", verifyTokenAndAuthorization, async (req, res) => {
         res.status(200).json({message: "added like successfully"});
     }catch(err){
         console.log("Error @post /like", err);
+        res.status(500).json({success: false, "message": err});
     }
 });
 
@@ -176,6 +178,7 @@ router.post("/remove-like", verifyTokenAndAuthorization, async (req, res) => {
         res.status(200).json({message: "removed like successfully"});
     }catch(err){
         console.log("Error @post /remove-like", err);
+        res.status(500).json({success: false, "message": err});
     }
 });
 
@@ -219,8 +222,67 @@ router.get("/search/:searchText", async (req, res) => {
         res.status(200).json({data,success: true});
     }catch(err){
         console.log("Error server @/search ",err);
+        res.status(500).json({success: false, "message": err});
     }
 });
+
+async function getTop5SimilarProducts(currentProductId, currentProductTags) {
+    try {
+        const top5Products = await Product.aggregate([
+            {
+                $match: {
+                    _id: { $ne: new mongoose.Types.ObjectId(currentProductId) },
+                    tags: { $in: currentProductTags }
+                }
+            },
+            {
+                $addFields: {
+                    matchingTagsCount: {
+                        $size: {
+                            $setIntersection: ["$tags", currentProductTags]
+                        }
+                    }
+                }
+            },
+            {
+                $sort: { matchingTagsCount: -1 }
+            },
+            {
+                $limit: 5
+            },
+            {
+                $project: {
+                    _id: 1,
+                    title: 1,
+                    image_url: 1,
+                    rating: 1,
+                }
+            }
+        ]);
+
+        return top5Products;
+    } catch (error) {
+        console.error("Error fetching top 5 similar products:", error);
+        throw error;
+    }
+}
+
+router.get("/similarTo/:productId", verifyTokenAndAuthorization, async (req, res) => {
+    try{
+        const {productId} = req.params;
+        const product = await Product.findById(productId);
+        if(!product){
+            return res.status(401).json({success: false,"message": "No product found"});
+        }
+        const {_id, tags} = product
+        const data = await getTop5SimilarProducts(_id, tags);
+        res.status(200).json({success: true, data});
+    }catch(err){
+        console.log("GEt similar products error: ", err);
+        res.status(500).json({success: false, "message": err});
+    }
+});
+
 
 //  FOR ADMIN DASHBOARD
 router.get("/productsCount", verifyTokenAndAdmin, async (req, res) => {
@@ -338,7 +400,7 @@ router.get("/:productId", verifyTokenAndAuthorization, async (req, res) => {
         res.status(200).json({product});
     }catch(err){
         console.log("get products by id error : ", err);
-        res.status(500).json(err);
+        res.status(500).json({success: false, "message": err});
     }
 });
 module.exports = router;
